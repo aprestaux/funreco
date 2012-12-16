@@ -23,6 +23,7 @@ public class Object {
 		this.objectProperties = objectProperties;
 	}
 
+	@Override
 	public String toString() {
         return "Object{" +
                 "id='" + id + '\'' +

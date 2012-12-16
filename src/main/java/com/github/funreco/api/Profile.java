@@ -30,6 +30,7 @@ public class Profile {
 		this.name = name;
 	}
 
+	@Override
 	public String toString() {
         return "Profile{" +
                 "email='" + email + '\'' +
