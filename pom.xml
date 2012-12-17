@@ -129,14 +129,14 @@
             <version>1.1.2</version>
             <scope>compile</scope>
         </dependency>
-        
+
+        <!-- mongodb -->
         <dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>2.10.0</version>
 			<scope>compile</scope>
 		</dependency>
-		
 		<dependency>
 		    <groupId>com.google.code.morphia</groupId>
 		    <artifactId>morphia</artifactId>
