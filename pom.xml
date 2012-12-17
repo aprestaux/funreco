@@ -35,6 +35,14 @@
             </plugin>
         </plugins>
     </build>
+    
+    <repositories>
+        <repository>
+            <id>morphia.googlecode.com</id>
+            <name>Morphia Repo at Google Code</name>
+            <url>http://morphia.googlecode.com/svn/mavenrepo</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <!-- test libs -->
