@@ -11,8 +11,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import com.github.aprestaux.funreco.SpringConfig;
 import com.github.aprestaux.funreco.domain.DBAction;
+import com.github.aprestaux.funreco.domain.integration.IntegrationSpringConfig;
 import com.google.code.morphia.Datastore;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -21,7 +21,7 @@ import static org.fest.assertions.Assertions.assertThat;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 public class DBActionTest {
     @Configuration
-    @Import(SpringConfig.class)
+    @Import(IntegrationSpringConfig.class)
     static class ContextConfiguration {
 
     }

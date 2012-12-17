@@ -1,11 +1,12 @@
 package com.github.aprestaux.funreco.api;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Object {
 	private String id;
-    private Map<String, ArrayList<String>> objectProperties;
+
+    private Map<String, List<String>> objectProperties;
 	
     public String getId() {
 		return id;
@@ -15,11 +16,11 @@ public class Object {
 		this.id = id;
 	}
 
-	public Map<String, ArrayList<String>> getObjectProperties() {
+	public Map<String, List<String>> getObjectProperties() {
 		return objectProperties;
 	}
 
-	public void setObjectProperties(Map<String, ArrayList<String>> objectProperties) {
+	public void setObjectProperties(Map<String, List<String>> objectProperties) {
 		this.objectProperties = objectProperties;
 	}
 

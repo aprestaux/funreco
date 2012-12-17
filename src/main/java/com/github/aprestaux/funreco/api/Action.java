@@ -6,8 +6,17 @@ public class Action {
 	private Profile profile;
     private Object object;
     private Date date;
-	
-	public Profile getProfile() {
+
+    public Action() {
+    }
+
+    public Action(Profile profile, Object object) {
+        this.profile = profile;
+        this.object = object;
+        this.date = new Date();
+    }
+
+    public Profile getProfile() {
 		return profile;
 	}
 
