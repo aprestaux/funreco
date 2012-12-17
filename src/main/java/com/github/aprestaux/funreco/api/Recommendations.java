@@ -1,4 +1,4 @@
-package com.github.funreco.api;
+package com.github.aprestaux.funreco.api;
 
 import java.util.Collection;
 import java.util.HashMap;

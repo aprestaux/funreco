@@ -1,4 +1,4 @@
-package com.github.funreco.domain;
+package com.github.aprestaux.funreco.domain;
 
 import java.util.Date;
 

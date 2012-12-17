@@ -1,11 +1,11 @@
-package com.github.funreco.service;
+package com.github.aprestaux.funreco.service;
 
 import java.net.UnknownHostException;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.github.funreco.domain.Action;
+import com.github.aprestaux.funreco.domain.Action;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;

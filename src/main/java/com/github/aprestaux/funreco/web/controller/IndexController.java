@@ -1,4 +1,4 @@
-package com.github.funreco.web.controller;
+package com.github.aprestaux.funreco.web.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
