@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-public class Object {
+public class DBObject {
 	private Date date;
     private String objectId;
     private Map<String, Set<String>> objectProperties;

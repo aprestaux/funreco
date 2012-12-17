@@ -2,7 +2,7 @@ package com.github.aprestaux.funreco.domain;
 
 import java.util.List;
 
-public class Profile {
+public class DBProfile {
 	private String facebookId;
 	private String email;
 	private String name;

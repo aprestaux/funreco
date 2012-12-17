@@ -9,16 +9,16 @@ import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
 
-@Entity(value = "action", noClassnameStored = true)
-public class Action {
+@Entity(value = "actions", noClassnameStored = true)
+public class DBAction {
 	@Id
     private ObjectId id;
 
     @Embedded
-    private Profile profile;
+    private DBProfile profile;
 
     @Embedded
-    private Object object;
+    private DBObject object;
 	
 	@Property
 	private Date date = new Date();

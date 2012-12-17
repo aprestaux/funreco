@@ -12,14 +12,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.SpringConfig;
-import com.github.aprestaux.funreco.domain.Action;
+import com.github.aprestaux.funreco.domain.DBAction;
 import com.google.code.morphia.Datastore;
 
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
-public class ActionTest {
+public class DBActionTest {
     @Configuration
     @Import(SpringConfig.class)
     static class ContextConfiguration {
@@ -31,13 +31,13 @@ public class ActionTest {
 
     @Before
     public void clean() {
-        datastore.delete(datastore.find(Action.class));
+        datastore.delete(datastore.find(DBAction.class));
     }
 
     @Test
     public void save() {
-        datastore.save(new Action());
+        datastore.save(new DBAction());
 
-        assertThat(datastore.find(Action.class).countAll()).isEqualTo(1);
+        assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(1);
     }
 }
