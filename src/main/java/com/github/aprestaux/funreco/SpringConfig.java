@@ -1,4 +1,4 @@
-package com.github.aprestaux.funreco.service;
+package com.github.aprestaux.funreco;
 
 import java.net.UnknownHostException;
 
