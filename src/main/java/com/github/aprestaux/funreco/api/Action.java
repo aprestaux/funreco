@@ -39,8 +39,4 @@ public class Action {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
-	public boolean equals(Action action) {
-		return (this.profile.equals(action.profile) && this.object.equals(action.object) && this.date.toString() == action.date.toString());
-	}
 }

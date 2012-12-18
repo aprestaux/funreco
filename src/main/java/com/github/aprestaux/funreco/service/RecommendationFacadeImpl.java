@@ -1,7 +1,6 @@
 package com.github.aprestaux.funreco.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
+import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
 import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.api.Recommendations;
@@ -52,11 +52,11 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public void updateFriends(String facebookId, List<Friend> friends) throws ProfileNotFoundException {
+    public void updateFriends(String facebookId, Friends friends) throws ProfileNotFoundException {
         DBProfile dbProfile = assertFindByFacebookId(facebookId);
 
         if (friends == null) {
-            friends = Collections.emptyList();
+            friends = new Friends();
         }
 
         List<String> ids = new ArrayList<String>();
@@ -71,13 +71,15 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public List<Profile> findFriends(String facebookId) throws ProfileNotFoundException {
+    public Friends findFriends(String facebookId) throws ProfileNotFoundException {
         DBProfile dbProfile = assertFindByFacebookId(facebookId);
 
-        List<Profile> friends = new ArrayList<Profile>();
+        Friends friends = new Friends();
 
-        for (String id : dbProfile.getFriendsIds()) {
-            friends.add(findProfile(id));
+        if (dbProfile.getFriendsIds() != null) {
+            for (String id : dbProfile.getFriendsIds()) {
+                friends.add(toFriend(id));
+            }
         }
 
         return friends;
@@ -246,6 +248,14 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         //dbObject.setObjectProperties(object.getObjectProperties());
 
         return dbObject;
+    }
+
+    public Friend toFriend(String facebookId) {
+        Friend friend = new Friend();
+
+        friend.setFacebookId(facebookId);
+
+        return friend;
     }
 
     private DBProfile assertFindByFacebookId(String facebookId) throws ProfileNotFoundException {

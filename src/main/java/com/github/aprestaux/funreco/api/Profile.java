@@ -38,8 +38,4 @@ public class Profile {
                 ", name='" + name + '\'' +
                 '}';
     }
-
-	public boolean equals(Profile profile) {
-		return (this.facebookId == profile.facebookId && this.email == profile.email && this.name == profile.name);
-	}
 }

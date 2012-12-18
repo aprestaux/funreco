@@ -31,9 +31,5 @@ public class Object {
                 ", properties=" + objectProperties +
                 '}';
     }
-	
-	public boolean equals(Object object) {
-		return (this.id == object.id && this.objectProperties.equals(object.objectProperties));
-	}
 
 }

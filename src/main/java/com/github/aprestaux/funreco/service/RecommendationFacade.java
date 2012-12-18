@@ -3,7 +3,7 @@ package com.github.aprestaux.funreco.service;
 import java.util.List;
 
 import com.github.aprestaux.funreco.api.Action;
-import com.github.aprestaux.funreco.api.Friend;
+import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.api.Recommendations;
 
@@ -14,9 +14,9 @@ public interface RecommendationFacade {
 
     public Profile findProfile(String email, String facebookId) throws ProfileNotFoundException;
 
-    public void updateFriends(String facebookId, List<Friend> friends) throws ProfileNotFoundException;
+    public void updateFriends(String facebookId, Friends friends) throws ProfileNotFoundException;
 
-    public List<Profile> findFriends(String facebookId) throws ProfileNotFoundException;
+    public Friends findFriends(String facebookId) throws ProfileNotFoundException;
 
     public void pushAction(Action action) throws ProfileNotFoundException;
 

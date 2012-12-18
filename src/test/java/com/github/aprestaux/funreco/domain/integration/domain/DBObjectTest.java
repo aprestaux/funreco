@@ -1,7 +1,5 @@
 package com.github.aprestaux.funreco.domain.integration.domain;
 
-import static org.fest.assertions.Assertions.assertThat;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,19 +13,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import com.github.aprestaux.funreco.SpringConfig;
+import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.domain.DBObject;
 import com.google.code.morphia.Datastore;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ActiveProfiles(profiles = "integration")
 public class DBObjectTest {
 	@Configuration
-	@Import(SpringConfig.class)
+	@Import(IntegrationSpringConfig.class)
 	static class ContextConfiguration {
 
 	}

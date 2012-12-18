@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.google.code.morphia.Datastore;
@@ -12,6 +13,7 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 @Configuration
+@Profile("default")
 public class SpringConfig {
     public static final String DB_NAME = "funreco";
 

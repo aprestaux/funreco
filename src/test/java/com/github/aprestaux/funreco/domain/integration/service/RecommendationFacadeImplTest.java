@@ -1,10 +1,6 @@
 package com.github.aprestaux.funreco.domain.integration.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -14,28 +10,31 @@ import org.junit.runner.RunWith;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import com.github.aprestaux.funreco.TestData;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
-import com.github.aprestaux.funreco.api.Object;
 import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
-import com.github.aprestaux.funreco.domain.integration.IntegrationSpringConfig;
+import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 import com.github.aprestaux.funreco.service.RecommendationFacadeImpl;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
 
+import static com.github.aprestaux.funreco.TestData.*;
 import static com.github.aprestaux.funreco.domain.integration.service.Conditions.sameProfile;
 import static org.fest.assertions.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ActiveProfiles(profiles = "integration")
 public class RecommendationFacadeImplTest {
     @Configuration
     @Import(IntegrationSpringConfig.class)
@@ -45,10 +44,6 @@ public class RecommendationFacadeImplTest {
             return new RecommendationFacadeImpl();
         }
     }
-
-    public static final String TEST_FB_ID = "fbId";
-
-    public static final String TEST_FRIEND_FB_ID = "friendFbId";
 
     @Inject
     private Datastore datastore;
@@ -83,7 +78,7 @@ public class RecommendationFacadeImplTest {
 
         //act
         Profile profile = new Profile();
-        profile.setFacebookId(TEST_FB_ID);
+        profile.setFacebookId(TestData.TEST_FB_ID);
         profile.setEmail("newprofile@test.com");
         profile.setName("'newProfile'");
         facade.updateProfile(profile);
@@ -98,7 +93,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         // act
-        Profile profile = facade.findProfile(TEST_FB_ID);
+        Profile profile = facade.findProfile(TestData.TEST_FB_ID);
 
         // assert
         assertThat(datastore.find(DBProfile.class).get()).is(sameProfile(profile));
@@ -110,10 +105,10 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         //act
-        facade.updateFriends(TEST_FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.TEST_FB_ID, toFriends(testFriendProfile()));
 
         //assert
-        assertThat(datastore.find(DBProfile.class).get().getFriendsIds()).containsExactly(TEST_FRIEND_FB_ID);
+        assertThat(datastore.find(DBProfile.class).get().getFriendsIds()).containsExactly(TestData.TEST_FRIEND_FB_ID);
     }
 
     @Test
@@ -121,14 +116,14 @@ public class RecommendationFacadeImplTest {
         //arrange
         facade.updateProfile(testProfile());
         facade.updateProfile(testFriendProfile());
-        facade.updateFriends(TEST_FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.TEST_FB_ID, toFriends(testFriendProfile()));
 
         //act
-        List<Profile> friends = facade.findFriends(TEST_FB_ID);
+        List<Friend> friends = facade.findFriends(TestData.TEST_FB_ID);
 
         //assert
         assertThat(friends).hasSize(1);
-        assertThat(friends.get(0).getFacebookId()).isEqualTo(TEST_FRIEND_FB_ID);
+        assertThat(friends.get(0).getFacebookId()).isEqualTo(TestData.TEST_FRIEND_FB_ID);
     }
 
     @Test
@@ -141,7 +136,7 @@ public class RecommendationFacadeImplTest {
 
         // assert
         assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(1);
-        assertThat(datastore.find(DBAction.class).get().getProfile().getFacebookId()).isEqualTo(TEST_FB_ID);
+        assertThat(datastore.find(DBAction.class).get().getProfile().getFacebookId()).isEqualTo(TestData.TEST_FB_ID);
     }
 
     @Test
@@ -182,7 +177,7 @@ public class RecommendationFacadeImplTest {
         facade.pushAction(new Action(testFriendProfile(), testObject()));
 
         //assert
-        assertThat(facade.findActions(TEST_FB_ID, 0, 10).size()).isEqualTo(2);
+        assertThat(facade.findActions(TestData.TEST_FB_ID, 0, 10).size()).isEqualTo(2);
     }
 
     @Test
@@ -221,49 +216,5 @@ public class RecommendationFacadeImplTest {
         assert reco.recommendations.size() > 0
     }   */
 
-    private Profile testProfile() {
-        Profile profile = new Profile();
-        profile.setFacebookId(TEST_FB_ID);
-        profile.setEmail("123@test.com");
-        profile.setName("123");
-        return profile;
-    }
-
-    private Profile testFriendProfile() {
-        Profile profile = new Profile();
-        profile.setFacebookId(TEST_FRIEND_FB_ID);
-        profile.setEmail("friend@test.com");
-        profile.setName("friend");
-        return profile;
-    }
-
-    private Object testObject() {
-        Object object = new Object();
-
-        object.setId("publicObjectId");
-
-        Map<String, List<String>> objectProperties = new HashMap<String, List<String>>();
-        objectProperties.put("show", Arrays.asList("musique", "dance"));
-
-        object.setObjectProperties(objectProperties);
-
-        return object;
-    }
-
-    private Friend toFriend(Profile profile) {
-        Friend friend = new Friend();
-        friend.setFacebookId(profile.getFacebookId());
-        friend.setName(profile.getName());
-        return friend;
-    }
-
-    private List<Friend> toFriends(Profile... profiles) {
-        List<Friend> friends = new ArrayList<Friend>();
-
-        for (Profile profile : profiles) {
-            friends.add(toFriend(profile));
-        }
-
-        return friends;
-    }
+    
 }
