@@ -16,7 +16,7 @@ import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.google.code.morphia.Datastore;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)

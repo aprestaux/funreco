@@ -19,7 +19,7 @@ import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.google.code.morphia.Datastore;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -57,8 +57,7 @@ public class DBProfileTest {
 		datastore.save(profile);
 
 		assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
-		DBProfile dbProfile = datastore.find(DBProfile.class).field("name")
-				.equal("nameProfile").get();
+		DBProfile dbProfile = datastore.find(DBProfile.class).field("name").equal("nameProfile").get();
 		assertThat(dbProfile.getFacebookId().equals("testFBId"));
 
 	}

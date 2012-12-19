@@ -1,15 +1,18 @@
 package com.github.aprestaux.funreco.utils;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
+import org.junit.Ignore;
+
+import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
+import com.github.aprestaux.funreco.api.ObjectProperties;
 import com.github.aprestaux.funreco.api.Profile;
 
+@Ignore("test data factories")
 public class TestData {
     public static final String FB_ID = "fbId";
 
@@ -19,7 +22,7 @@ public class TestData {
         Profile profile = new Profile();
         profile.setFacebookId(FB_ID);
         profile.setEmail("123@test.com");
-        profile.setName("123");
+        profile.setName("Cédric Gignon");
         return profile;
     }
 
@@ -31,15 +34,29 @@ public class TestData {
         return profile;
     }
 
+    public static Action testAction() {
+        ObjectProperties props = new ObjectProperties();
+        props.put("type", Arrays.asList("news"));
+
+        Object object = new Object();
+        object.setId("objectId");
+        object.setProperties(props);
+
+        Action action = new Action();
+        action.setDate(new Date());
+        action.setObject(object);
+        return action;
+    }
+
     public static com.github.aprestaux.funreco.api.Object testObject() {
         Object object = new Object();
 
         object.setId("publicObjectId");
 
-        Map<String, List<String>> objectProperties = new HashMap<String, List<String>>();
+        ObjectProperties objectProperties = new ObjectProperties();
         objectProperties.put("show", Arrays.asList("musique", "dance"));
 
-        object.setObjectProperties(objectProperties);
+        object.setProperties(objectProperties);
 
         return object;
     }

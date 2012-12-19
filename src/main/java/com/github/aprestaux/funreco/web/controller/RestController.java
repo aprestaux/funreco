@@ -40,13 +40,13 @@ public class RestController {
 
     @RequestMapping(value = "/api/profiles/{facebookId}/friends", method = RequestMethod.PUT)
     @ResponseBody
-    public void putFriends(@RequestBody Friends friends, @PathVariable String facebookId) throws ProfileNotFoundException {
+    public void putFriends(@PathVariable String facebookId, @RequestBody Friends friends) throws ProfileNotFoundException {
         recommendationFacade.updateFriends(facebookId, friends);
     }
 
     @RequestMapping(value = "/api/profiles/{facebookId}/actions", method = RequestMethod.POST)
     @ResponseBody
-    public void postAction(@RequestBody Action action) throws ProfileNotFoundException {
-        recommendationFacade.pushAction(action);
+    public void postAction(@PathVariable String facebookId, @RequestBody Action action) throws ProfileNotFoundException {
+        recommendationFacade.pushAction(facebookId, action);
     }
 }

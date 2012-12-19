@@ -86,12 +86,12 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public void pushAction(Action action) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindByFacebookId(action.getProfile().getFacebookId());
+    public void pushAction(String facebookId, Action action) throws ProfileNotFoundException {
+        DBProfile dbProfile = assertFindByFacebookId(facebookId);
 
         DBAction dbAction = new DBAction();
         dbAction.setProfile(dbProfile);
-        dbAction.setDate(new Date());
+        dbAction.setDate(action.getDate() == null ? new Date() : action.getDate());
         dbAction.setObject(toDBObject(action.getObject()));
 
         datastore.save(dbAction);
@@ -220,7 +220,6 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         Action action = new Action();
 
         action.setDate(dbAction.getDate());
-        action.setProfile(toProfile(dbAction.getProfile()));
         action.setObject(toObject(dbAction.getObject()));
         
         return action;
@@ -233,7 +232,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         Object object = new Object();
         object.setId(dbObject.getObjectId());
-        //object.setObjectProperties(dbObject.getObjectProperties());
+        object.getProperties().putAll(dbObject.getObjectProperties()); ;
         
         return object;
     }
@@ -245,7 +244,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         DBObject dbObject = new DBObject();
         dbObject.setObjectId(object.getId());
-        //dbObject.setObjectProperties(object.getObjectProperties());
+        dbObject.setObjectProperties(object.getProperties());
 
         return dbObject;
     }

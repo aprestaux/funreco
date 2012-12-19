@@ -1,10 +1,10 @@
 package com.github.aprestaux.funreco.integration.domain;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -22,7 +22,7 @@ import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.domain.DBObject;
 import com.google.code.morphia.Datastore;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -44,11 +44,8 @@ public class DBObjectTest {
 
 	@Test
 	public void save() {
-		Map<String, Set<String>> properties = new HashMap<String, Set<String>>();
-		Set<String> s = new HashSet<String>();
-		s.add("video");
-		s.add("show");
-		properties.put("type", s);
+		Map<String, List<String>> properties = new HashMap<String, List<String>>();
+		properties.put("type", Arrays.asList("video", "show"));
 
 		DBObject object = new DBObject();
 		object.setObjectId("testId");
@@ -58,8 +55,7 @@ public class DBObjectTest {
 		datastore.save(object);
 
 		assertThat(datastore.find(DBObject.class).countAll()).isEqualTo(1);
-		DBObject dbObject = datastore.find(DBObject.class).field("objectId")
-				.equal("testId").get();
+		DBObject dbObject = datastore.find(DBObject.class).field("objectId").equal("testId").get();
 		assertThat(dbObject.getObjectProperties() == properties);
 
 	}

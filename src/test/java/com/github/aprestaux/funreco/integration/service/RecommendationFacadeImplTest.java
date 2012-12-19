@@ -132,7 +132,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         // act
-        facade.pushAction(new Action(testProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
 
         // assert
         assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(1);
@@ -143,10 +143,10 @@ public class RecommendationFacadeImplTest {
     public void pushActionForSameObject() throws ProfileNotFoundException {
         //arrange
         facade.updateProfile(testProfile());
-        facade.pushAction(new Action(testProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
 
         //act
-        facade.pushAction(new Action(testProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
 
         //assert
         assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(2);
@@ -158,7 +158,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         //act
-        facade.pushAction(new Action(testProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
 
         //assert
         assertThat(facade.findActions(0, 5).size()).isEqualTo(1);
@@ -172,9 +172,9 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testFriendProfile());
 
         //act
-        facade.pushAction(new Action(testProfile(), testObject()));
-        facade.pushAction(new Action(testProfile(), testObject()));
-        facade.pushAction(new Action(testFriendProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
+        facade.pushAction(TestData.FRIEND_FB_ID, new Action(testObject()));
 
         //assert
         assertThat(facade.findActions(TestData.FB_ID, 0, 10).size()).isEqualTo(2);
@@ -187,9 +187,9 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testFriendProfile());
 
         //act
-        facade.pushAction(new Action(testProfile(), testObject()));
-        facade.pushAction(new Action(testProfile(), testObject()));
-        facade.pushAction(new Action(testFriendProfile(), testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
+        facade.pushAction(TestData.FB_ID, new Action(testObject()));
+        facade.pushAction(TestData.FRIEND_FB_ID, new Action(testObject()));
 
         assertThat(facade.countActions()).isEqualTo(3);
     }

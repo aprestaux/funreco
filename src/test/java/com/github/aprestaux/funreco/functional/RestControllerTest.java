@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
+import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Profile;
@@ -78,16 +79,28 @@ public class RestControllerTest {
         assertThat(friends.get(0).getFacebookId()).isEqualTo(testFriendProfile().getFacebookId());
     }
 
+    @Test
+    public void postAction() {
+        doSaveProfile(testProfile());
+        doPostAction(FB_ID, testAction());
+    }
+
     private void doSaveProfile(Profile profile) {
-        given().contentType("application/json").body(profile)
+        given().contentType("application/json; charset=UTF-8").body(profile)
                 .expect().statusCode(200)
                 .when().post("/api/profiles");
     }
 
     private void doPutFriends(String facebookId, List<Friend> friends) {
-        given().contentType("application/json").body(friends)
+        given().contentType("application/json; charset=UTF-8").body(friends)
                 .expect().statusCode(200)
                 .when().put("/api/profiles/" + facebookId + "/friends");
+    }
+
+    private void doPostAction(String facebookId, Action action) {
+        given().contentType("application/json; charset=UTF-8").body(action)
+                .expect().statusCode(200)
+                .when().post("/api/profiles/" + facebookId + "/actions");
     }
 
     private Friends doGetFriends(String facebookId) {

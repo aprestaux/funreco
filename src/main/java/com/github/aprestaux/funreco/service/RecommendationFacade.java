@@ -18,7 +18,7 @@ public interface RecommendationFacade {
 
     public Friends findFriends(String facebookId) throws ProfileNotFoundException;
 
-    public void pushAction(Action action) throws ProfileNotFoundException;
+    public void pushAction(String facebookId, Action action) throws ProfileNotFoundException;
 
     public List<Action> findActions(int offset, int limit);
 

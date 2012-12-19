@@ -1,8 +1,8 @@
 package com.github.aprestaux.funreco.domain;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
@@ -15,7 +15,7 @@ public class DBObject {
     private String objectId;
 
     @Embedded
-    private Map<String, Set<String>> objectProperties;
+    private Map<String, List<String>> objectProperties;
 
     public Date getDate() {
         return date;
@@ -33,11 +33,11 @@ public class DBObject {
         this.objectId = objectId;
     }
 
-    public Map<String, Set<String>> getObjectProperties() {
+    public Map<String, List<String>> getObjectProperties() {
         return objectProperties;
     }
 
-    public void setObjectProperties(Map<String, Set<String>> objectProperties) {
+    public void setObjectProperties(Map<String, List<String>> objectProperties) {
         this.objectProperties = objectProperties;
     }
 }
