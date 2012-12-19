@@ -1,4 +1,4 @@
-package com.github.aprestaux.funreco;
+package com.github.aprestaux.funreco.utils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,13 +11,13 @@ import com.github.aprestaux.funreco.api.Object;
 import com.github.aprestaux.funreco.api.Profile;
 
 public class TestData {
-    public static final String TEST_FB_ID = "fbId";
+    public static final String FB_ID = "fbId";
 
-    public static final String TEST_FRIEND_FB_ID = "friendFbId";
+    public static final String FRIEND_FB_ID = "friendFbId";
     
     public static Profile testProfile() {
         Profile profile = new Profile();
-        profile.setFacebookId(TEST_FB_ID);
+        profile.setFacebookId(FB_ID);
         profile.setEmail("123@test.com");
         profile.setName("123");
         return profile;
@@ -25,7 +25,7 @@ public class TestData {
 
     public static Profile testFriendProfile() {
         Profile profile = new Profile();
-        profile.setFacebookId(TEST_FRIEND_FB_ID);
+        profile.setFacebookId(FRIEND_FB_ID);
         profile.setEmail("friend@test.com");
         profile.setName("friend");
         return profile;

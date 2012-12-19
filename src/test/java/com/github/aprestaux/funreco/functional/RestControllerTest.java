@@ -22,10 +22,10 @@ import com.github.aprestaux.funreco.domain.DBProfile;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
 
-import static com.github.aprestaux.funreco.TestData.*;
+import static com.github.aprestaux.funreco.utils.TestData.*;
 import static com.jayway.restassured.RestAssured.expect;
 import static com.jayway.restassured.RestAssured.given;
-import static org.fest.assertions.Assertions.assertThat;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Fire tomcat with "mvn -Dspring.profiles.active=integration tomcat:run" to activate integration profile
@@ -62,7 +62,7 @@ public class RestControllerTest {
     public void getProfile() {
         doSaveProfile(testProfile());
 
-        Profile profile = expect().statusCode(200).when().get("/api/profiles/" + TEST_FB_ID).as(Profile.class);
+        Profile profile = expect().statusCode(200).when().get("/api/profiles/" + FB_ID).as(Profile.class);
 
         assertThat(profile.getName()).isEqualTo(testProfile().getName());
     }
@@ -70,9 +70,9 @@ public class RestControllerTest {
     @Test
     public void putFriends() {
         doSaveProfile(testProfile());
-        doPutFriends(TEST_FB_ID, toFriends(testFriendProfile()));
+        doPutFriends(FB_ID, toFriends(testFriendProfile()));
 
-        Friends friends = doGetFriends(TEST_FB_ID);
+        Friends friends = doGetFriends(FB_ID);
 
         assertThat(friends.size()).isEqualTo(1);
         assertThat(friends.get(0).getFacebookId()).isEqualTo(testFriendProfile().getFacebookId());

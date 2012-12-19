@@ -1,11 +1,10 @@
-package com.github.aprestaux.funreco.domain.integration.service;
+package com.github.aprestaux.funreco.utils;
 
-import org.fest.assertions.Condition;
+import org.fest.assertions.core.Condition;
 
 import com.github.aprestaux.funreco.api.Profile;
-import com.github.aprestaux.funreco.domain.DBProfile;
 
-public class SameProfile extends Condition<Object> {
+public class SameProfile extends Condition<Profile> {
 
     private Profile reference;
 
@@ -14,9 +13,7 @@ public class SameProfile extends Condition<Object> {
     }
 
     @Override
-    public boolean matches(Object value) {
-        DBProfile profile = (DBProfile) value;
-
+    public boolean matches(Profile profile) {
         return reference.getFacebookId().equals(profile.getFacebookId())
                 && reference.getEmail().equals(profile.getEmail())
                 && reference.getName().equals(profile.getName());

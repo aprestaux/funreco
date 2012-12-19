@@ -15,22 +15,22 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import com.github.aprestaux.funreco.TestData;
+import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
-import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 import com.github.aprestaux.funreco.service.RecommendationFacadeImpl;
+import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
 
-import static com.github.aprestaux.funreco.TestData.*;
-import static com.github.aprestaux.funreco.domain.integration.service.Conditions.sameProfile;
-import static org.fest.assertions.Assertions.assertThat;
+import static com.github.aprestaux.funreco.utils.Conditions.sameAsDBProfile;
+import static com.github.aprestaux.funreco.utils.TestData.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -68,7 +68,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(profile);
 
         // assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameProfile(profile));
+        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
     }
 
     @Test
@@ -78,13 +78,13 @@ public class RecommendationFacadeImplTest {
 
         //act
         Profile profile = new Profile();
-        profile.setFacebookId(TestData.TEST_FB_ID);
+        profile.setFacebookId(TestData.FB_ID);
         profile.setEmail("newprofile@test.com");
         profile.setName("'newProfile'");
         facade.updateProfile(profile);
 
         //assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameProfile(profile));
+        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
     }
 
     @Test
@@ -93,10 +93,10 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         // act
-        Profile profile = facade.findProfile(TestData.TEST_FB_ID);
+        Profile profile = facade.findProfile(TestData.FB_ID);
 
         // assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameProfile(profile));
+        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
     }
 
     @Test
@@ -105,10 +105,10 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         //act
-        facade.updateFriends(TestData.TEST_FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
 
         //assert
-        assertThat(datastore.find(DBProfile.class).get().getFriendsIds()).containsExactly(TestData.TEST_FRIEND_FB_ID);
+        assertThat(datastore.find(DBProfile.class).get().getFriendsIds()).containsExactly(TestData.FRIEND_FB_ID);
     }
 
     @Test
@@ -116,14 +116,14 @@ public class RecommendationFacadeImplTest {
         //arrange
         facade.updateProfile(testProfile());
         facade.updateProfile(testFriendProfile());
-        facade.updateFriends(TestData.TEST_FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
 
         //act
-        List<Friend> friends = facade.findFriends(TestData.TEST_FB_ID);
+        List<Friend> friends = facade.findFriends(TestData.FB_ID);
 
         //assert
         assertThat(friends).hasSize(1);
-        assertThat(friends.get(0).getFacebookId()).isEqualTo(TestData.TEST_FRIEND_FB_ID);
+        assertThat(friends.get(0).getFacebookId()).isEqualTo(TestData.FRIEND_FB_ID);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class RecommendationFacadeImplTest {
 
         // assert
         assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(1);
-        assertThat(datastore.find(DBAction.class).get().getProfile().getFacebookId()).isEqualTo(TestData.TEST_FB_ID);
+        assertThat(datastore.find(DBAction.class).get().getProfile().getFacebookId()).isEqualTo(TestData.FB_ID);
     }
 
     @Test
@@ -177,7 +177,7 @@ public class RecommendationFacadeImplTest {
         facade.pushAction(new Action(testFriendProfile(), testObject()));
 
         //assert
-        assertThat(facade.findActions(TestData.TEST_FB_ID, 0, 10).size()).isEqualTo(2);
+        assertThat(facade.findActions(TestData.FB_ID, 0, 10).size()).isEqualTo(2);
     }
 
     @Test
