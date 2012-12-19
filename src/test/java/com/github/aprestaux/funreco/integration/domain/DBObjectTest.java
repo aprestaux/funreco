@@ -1,7 +1,10 @@
-package com.github.aprestaux.funreco.domain.integration.domain;
+package com.github.aprestaux.funreco.integration.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -16,7 +19,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
-import com.github.aprestaux.funreco.domain.DBProfile;
+import com.github.aprestaux.funreco.domain.DBObject;
 import com.google.code.morphia.Datastore;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -24,7 +27,7 @@ import static org.fest.assertions.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles(profiles = "integration")
-public class DBProfileTest {
+public class DBObjectTest {
 	@Configuration
 	@Import(IntegrationSpringConfig.class)
 	static class ContextConfiguration {
@@ -36,30 +39,28 @@ public class DBProfileTest {
 
 	@Before
 	public void clean() {
-		datastore.delete(datastore.find(DBProfile.class));
+		datastore.delete(datastore.find(DBObject.class));
 	}
 
 	@Test
 	public void save() {
+		Map<String, Set<String>> properties = new HashMap<String, Set<String>>();
+		Set<String> s = new HashSet<String>();
+		s.add("video");
+		s.add("show");
+		properties.put("type", s);
 
-		List<String> friendsIdList = new ArrayList<String>();
+		DBObject object = new DBObject();
+		object.setObjectId("testId");
+		object.setDate(new Date());
+		object.setObjectProperties(properties);
 
-		friendsIdList.add("friendId1");
-		friendsIdList.add("friendId2");
+		datastore.save(object);
 
-		DBProfile profile = new DBProfile();
-
-		profile.setFacebookId("testFBId");
-		profile.setEmail("test@gmail.com");
-		profile.setName("nameProfile");
-		profile.setFriendsIds(friendsIdList);
-
-		datastore.save(profile);
-
-		assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
-		DBProfile dbProfile = datastore.find(DBProfile.class).field("name")
-				.equal("nameProfile").get();
-		assertThat(dbProfile.getFacebookId().equals("testFBId"));
+		assertThat(datastore.find(DBObject.class).countAll()).isEqualTo(1);
+		DBObject dbObject = datastore.find(DBObject.class).field("objectId")
+				.equal("testId").get();
+		assertThat(dbObject.getObjectProperties() == properties);
 
 	}
 }

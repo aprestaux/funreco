@@ -1,4 +1,4 @@
-package com.github.aprestaux.funreco.domain.integration.service;
+package com.github.aprestaux.funreco.integration.service;
 
 import java.util.List;
 

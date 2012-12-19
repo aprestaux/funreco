@@ -1,4 +1,4 @@
-package com.github.aprestaux.funreco.domain.integration.domain;
+package com.github.aprestaux.funreco.integration.domain;
 
 import javax.inject.Inject;
 
