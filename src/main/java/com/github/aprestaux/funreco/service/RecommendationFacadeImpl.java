@@ -230,7 +230,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         Object object = new Object();
         object.setId(dbObject.getObjectId());
-        object.getProperties().putAll(dbObject.getObjectProperties());
+        object.getAttributes().putAll(dbObject.getObjectProperties());
         
         return object;
     }
@@ -242,7 +242,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         DBObject dbObject = new DBObject();
         dbObject.setObjectId(object.getId());
-        dbObject.setObjectProperties(object.getProperties());
+        dbObject.setObjectProperties(object.getAttributes());
 
         return dbObject;
     }

@@ -1,6 +1,5 @@
 package com.github.aprestaux.funreco.utils;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import org.junit.Ignore;
@@ -9,7 +8,6 @@ import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
-import com.github.aprestaux.funreco.api.ObjectProperties;
 import com.github.aprestaux.funreco.api.Profile;
 
 @Ignore("test data factories")
@@ -33,12 +31,8 @@ public class TestData {
     }
 
     public static Action testAction() {
-        ObjectProperties props = new ObjectProperties();
-        props.put("type", Arrays.asList("news"));
-
-        Object object = new Object();
-        object.setId("objectId");
-        object.setProperties(props);
+        Object object = new Object("objectId");
+        object.putAttributes("type", "news");
 
         Action action = new Action();
         action.setDate(new Date());
@@ -46,15 +40,10 @@ public class TestData {
         return action;
     }
 
-    public static com.github.aprestaux.funreco.api.Object testObject() {
-        Object object = new Object();
+    public static Object testObject() {
+        Object object = new Object("publicObjectId");
 
-        object.setId("publicObjectId");
-
-        ObjectProperties objectProperties = new ObjectProperties();
-        objectProperties.put("show", Arrays.asList("musique", "dance"));
-
-        object.setProperties(objectProperties);
+        object.putAttributes("show", "musique", "dance");
 
         return object;
     }

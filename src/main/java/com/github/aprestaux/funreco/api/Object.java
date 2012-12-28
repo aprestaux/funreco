@@ -3,7 +3,18 @@ package com.github.aprestaux.funreco.api;
 public class Object {
 	private String id;
 
-    private ObjectProperties properties = new ObjectProperties();
+    private Attributes attributes = new Attributes();
+
+    public Object() {
+    }
+
+    public Object(String id) {
+        this.id = id;
+    }
+
+    public void putAttributes(String key, String... values) {
+        attributes.put(key, values);
+    }
 
     public String getId() {
 		return id;
@@ -13,12 +24,12 @@ public class Object {
 		this.id = id;
 	}
 
-	public ObjectProperties getProperties() {
-		return properties;
+	public Attributes getAttributes() {
+		return attributes;
 	}
 
-	public void setProperties(ObjectProperties properties) {
-		this.properties = properties;
+	public void setAttributes(Attributes attributes) {
+		this.attributes = attributes;
 	}
 
 
