@@ -9,7 +9,7 @@ import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 import com.github.aprestaux.funreco.utils.TestData;
 
-import static com.github.aprestaux.funreco.utils.Conditions.sameAsProfile;
+import static com.github.aprestaux.funreco.utils.conditions.Conditions.sameAsProfile;
 import static com.github.aprestaux.funreco.utils.TestData.testProfile;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

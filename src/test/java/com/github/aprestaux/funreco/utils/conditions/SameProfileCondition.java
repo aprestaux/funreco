@@ -1,14 +1,14 @@
-package com.github.aprestaux.funreco.utils;
+package com.github.aprestaux.funreco.utils.conditions;
 
 import org.fest.assertions.core.Condition;
 
 import com.github.aprestaux.funreco.api.Profile;
 
-public class SameProfile extends Condition<Profile> {
+public class SameProfileCondition extends Condition<Profile> {
 
     private Profile reference;
 
-    public SameProfile(Profile reference) {
+    public SameProfileCondition(Profile reference) {
         this.reference = reference;
     }
 

@@ -1,15 +1,15 @@
-package com.github.aprestaux.funreco.utils;
+package com.github.aprestaux.funreco.utils.conditions;
 
 import org.fest.assertions.core.Condition;
 
 import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.domain.DBProfile;
 
-public class SameDBProfile extends Condition<DBProfile> {
+public class SameDBProfileCondition extends Condition<DBProfile> {
 
     private Profile reference;
 
-    public SameDBProfile(Profile reference) {
+    public SameDBProfileCondition(Profile reference) {
         this.reference = reference;
     }
 

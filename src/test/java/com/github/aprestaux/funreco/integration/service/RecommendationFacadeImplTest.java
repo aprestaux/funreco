@@ -28,7 +28,7 @@ import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
 
-import static com.github.aprestaux.funreco.utils.Conditions.sameAsDBProfile;
+import static com.github.aprestaux.funreco.utils.conditions.Conditions.sameAsDBProfile;
 import static com.github.aprestaux.funreco.utils.TestData.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
