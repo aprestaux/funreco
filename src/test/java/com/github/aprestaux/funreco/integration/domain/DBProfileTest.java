@@ -49,14 +49,14 @@ public class DBProfileTest {
 
 		DBProfile profile = new DBProfile("testFBId");
 
-		profile.setEmail("test@gmail.com");
-		profile.setName("nameProfile");
+		profile.putAttributes("mail", "test@gmail.com");
+		profile.putAttributes("name", "nameProfile");
 		profile.setFriendsIds(friendsIdList);
 
 		datastore.save(profile);
 
 		assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
-		DBProfile dbProfile = datastore.find(DBProfile.class).field("name").equal("nameProfile").get();
+		DBProfile dbProfile = datastore.find(DBProfile.class).get();
 		assertThat(dbProfile.getExternalId().equals("testFBId"));
 
 	}

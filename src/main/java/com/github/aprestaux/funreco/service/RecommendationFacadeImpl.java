@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 
 import com.github.aprestaux.funreco.api.Action;
+import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
@@ -25,29 +26,28 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     private Datastore datastore;
 
     @Override
-    public void updateProfile(Profile profile) {
-        DBProfile dbProfile = findById(profile.getId());
+    public void updateProfile(String id, Attributes attributes) {
+        DBProfile dbProfile = findById(id);
 
         if (dbProfile == null) {
-            dbProfile = new DBProfile(profile.getId());
+            dbProfile = new DBProfile(id);
         }
 
-        dbProfile.setName(profile.getName());
-        dbProfile.setEmail(profile.getEmail());
+        dbProfile.setAttributes(attributes);
 
         datastore.save(dbProfile);
     }
 
     @Override
-    public Profile findProfile(String id) throws ProfileNotFoundException {
-        return toProfile(assertFindById(id));
+    public Attributes findProfile(String id) throws ProfileNotFoundException {
+        return toProfile(assertFindById(id)).getAttributes();
     }
 
     @Override
-    public Profile findProfile(String email, String id) {
+    public Attributes findProfile(String email, String id) {
         DBProfile profile = findByEmail(email);
 
-        return profile != null ? toProfile(profile) : toProfile(findById(id));
+        return profile != null ? toProfile(profile).getAttributes() : toProfile(findById(id)).getAttributes();
     }
 
     @Override
@@ -198,8 +198,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         Profile profile = new Profile(dbProfile.getExternalId());
 
-        profile.setEmail(dbProfile.getEmail());
-        profile.setName(dbProfile.getName());
+        profile.setAttributes(dbProfile.getAttributes());
         
         return profile;
     }

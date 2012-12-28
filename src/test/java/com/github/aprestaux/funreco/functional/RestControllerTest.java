@@ -16,6 +16,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
+import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Profile;
@@ -53,7 +54,7 @@ public class RestControllerTest {
     }
 
     @Test
-    public void postProfile() {
+    public void putProfile() {
         doSaveProfile(testProfile());
 
         assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
@@ -63,9 +64,9 @@ public class RestControllerTest {
     public void getProfile() {
         doSaveProfile(testProfile());
 
-        Profile profile = expect().statusCode(200).when().get("/api/profiles/" + FB_ID).as(Profile.class);
+        Attributes attributes = expect().statusCode(200).when().get("/api/profiles/" + FB_ID).as(Attributes.class);
 
-        assertThat(profile.getName()).isEqualTo(testProfile().getName());
+        assertThat(attributes.get("name")).isEqualTo(testProfileAttributes().get("name"));
     }
 
     @Test
@@ -88,7 +89,7 @@ public class RestControllerTest {
     private void doSaveProfile(Profile profile) {
         given().contentType("application/json; charset=UTF-8").body(profile)
                 .expect().statusCode(200)
-                .when().post("/api/profiles");
+                .when().put("/api/profiles" + FB_ID);
     }
 
     private void doPutFriends(String id, List<Friend> friends) {

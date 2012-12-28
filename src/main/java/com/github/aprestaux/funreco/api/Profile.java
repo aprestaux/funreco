@@ -2,14 +2,18 @@ package com.github.aprestaux.funreco.api;
 
 public class Profile {
 	private String id;
-    private String email;
-    private String name;
+
+    private Attributes attributes = new Attributes();
 
     public Profile() {
     }
 
     public Profile(String id) {
         this.id = id;
+    }
+
+    public void putAttributes(String key, String... values) {
+        attributes.put(key, values);
     }
 
     public String getId() {
@@ -20,28 +24,19 @@ public class Profile {
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
-	}
+    public Attributes getAttributes() {
+        return attributes;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setAttributes(Attributes attributes) {
+        this.attributes = attributes;
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String toString() {
+    @Override
+    public String toString() {
         return "Profile{" +
-                "email='" + email + '\'' +
-                ", id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "id='" + id + '\'' +
+                ", attributes=" + attributes +
                 '}';
     }
 }

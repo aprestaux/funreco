@@ -17,8 +17,8 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
+import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Friend;
-import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
@@ -28,7 +28,6 @@ import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
 
-import static com.github.aprestaux.funreco.utils.conditions.Conditions.sameAsDBProfile;
 import static com.github.aprestaux.funreco.utils.TestData.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -61,47 +60,46 @@ public class RecommendationFacadeImplTest {
 
     @Test
     public void updateUnknownProfile() {
-        // arrange
-        Profile profile = testProfile();
-
         // act
-        facade.updateProfile(profile);
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         // assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
+        Attributes attributes = datastore.find(DBProfile.class).get().getAttributes();
+        assertThat(attributes).isEqualTo(testProfileAttributes());
     }
 
     @Test
     public void updateExistingProfile(){
         //arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         //act
-        Profile profile = new Profile(TestData.FB_ID);
-        profile.setEmail("newprofile@test.com");
-        profile.setName("'newProfile'");
-        facade.updateProfile(profile);
+        Attributes attributes = new Attributes();
+        attributes.put("mail", "newprofile@test.com");
+        attributes.put("name", "newProfile");
+        facade.updateProfile(FB_ID, attributes);
 
         //assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
+        Attributes dbAttributes = datastore.find(DBProfile.class).get().getAttributes();
+        assertThat(dbAttributes).isEqualTo(attributes);
     }
 
     @Test
     public void findProfile() throws ProfileNotFoundException {
         // arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         // act
-        Profile profile = facade.findProfile(TestData.FB_ID);
+        Attributes attributes = facade.findProfile(TestData.FB_ID);
 
         // assert
-        assertThat(datastore.find(DBProfile.class).get()).is(sameAsDBProfile(profile));
+        assertThat(datastore.find(DBProfile.class).get().getAttributes()).isEqualTo(attributes);
     }
 
     @Test
     public void updateFriends() throws ProfileNotFoundException {
         //arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         //act
         facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
@@ -113,8 +111,8 @@ public class RecommendationFacadeImplTest {
     @Test
     public void findFriends() throws ProfileNotFoundException {
         //arrange
-        facade.updateProfile(testProfile());
-        facade.updateProfile(testFriendProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
+        facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
         facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
 
         //act
@@ -128,7 +126,7 @@ public class RecommendationFacadeImplTest {
     @Test
     public void pushNewAction() throws ProfileNotFoundException {
         // arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         // act
         facade.pushAction(TestData.FB_ID, new Action(testObject()));
@@ -141,7 +139,7 @@ public class RecommendationFacadeImplTest {
     @Test
     public void pushActionForSameObject() throws ProfileNotFoundException {
         //arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
         facade.pushAction(TestData.FB_ID, new Action(testObject()));
 
         //act
@@ -154,7 +152,7 @@ public class RecommendationFacadeImplTest {
     @Test
     public void findActions() throws ProfileNotFoundException {
         // arrange
-        facade.updateProfile(testProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
 
         //act
         facade.pushAction(TestData.FB_ID, new Action(testObject()));
@@ -167,8 +165,8 @@ public class RecommendationFacadeImplTest {
     @Test
     public void findActionsWithId() throws ProfileNotFoundException {
         //arrange
-        facade.updateProfile(testProfile());
-        facade.updateProfile(testFriendProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
+        facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
 
         //act
         facade.pushAction(TestData.FB_ID, new Action(testObject()));
@@ -182,8 +180,8 @@ public class RecommendationFacadeImplTest {
     @Test
     public void countActions() throws ProfileNotFoundException {
         //arrange
-        facade.updateProfile(testProfile());
-        facade.updateProfile(testFriendProfile());
+        facade.updateProfile(FB_ID, testProfileAttributes());
+        facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
 
         //act
         facade.pushAction(TestData.FB_ID, new Action(testObject()));

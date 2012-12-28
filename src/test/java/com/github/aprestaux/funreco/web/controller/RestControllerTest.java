@@ -4,13 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.github.aprestaux.funreco.api.Profile;
+import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 import com.github.aprestaux.funreco.utils.TestData;
 
-import static com.github.aprestaux.funreco.utils.conditions.Conditions.sameAsProfile;
-import static com.github.aprestaux.funreco.utils.TestData.testProfile;
+import static com.github.aprestaux.funreco.utils.TestData.testProfileAttributes;
 import static org.fest.assertions.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -27,10 +26,10 @@ public class RestControllerTest {
 
     @Test
     public void getProfile() throws ProfileNotFoundException {
-        when(facade.findProfile(TestData.FB_ID)).thenReturn(testProfile());
+        when(facade.findProfile(TestData.FB_ID)).thenReturn(testProfileAttributes());
 
-        Profile profile = restController.getProfile(TestData.FB_ID);
+        Attributes attributes = restController.getProfile(TestData.FB_ID);
 
-        assertThat(profile).is(sameAsProfile(testProfile()));
+        assertThat(attributes).isEqualTo(testProfileAttributes());
     }
 }

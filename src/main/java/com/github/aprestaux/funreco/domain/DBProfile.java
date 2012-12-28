@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
+import com.github.aprestaux.funreco.api.Attributes;
+import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
@@ -16,11 +18,8 @@ public class DBProfile {
     @Property
     private String externalId;
 
-    @Property
-	private String email;
-
-    @Property
-	private String name;
+    @Embedded
+	private Attributes attributes = new Attributes();
 
     @Property
 	private List<String> friendsIds;
@@ -32,12 +31,8 @@ public class DBProfile {
         this.externalId = externalId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void putAttributes(String key, String... values) {
+        attributes.put(key, values);
     }
 
     public String getExternalId() {
@@ -56,11 +51,11 @@ public class DBProfile {
         this.friendsIds = friendsIds;
     }
 
-    public String getName() {
-        return name;
+    public Attributes getAttributes() {
+        return attributes;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAttributes(Attributes attributes) {
+        this.attributes = attributes;
     }
 }

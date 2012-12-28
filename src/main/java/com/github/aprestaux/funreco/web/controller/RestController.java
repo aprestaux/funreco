@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.aprestaux.funreco.api.Action;
+import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Friends;
-import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 
@@ -22,14 +22,14 @@ public class RestController {
 
     @RequestMapping(value = "/api/profiles/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Profile getProfile(@PathVariable String id) throws ProfileNotFoundException {
+    public Attributes getProfile(@PathVariable String id) throws ProfileNotFoundException {
         return recommendationFacade.findProfile(id);
     }
 
-    @RequestMapping(value = "/api/profiles", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/profiles/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public void postProfile(@RequestBody Profile profile) {
-        recommendationFacade.updateProfile(profile);
+    public void postProfile(@PathVariable String id, @RequestBody Attributes attributes) {
+        recommendationFacade.updateProfile(id, attributes);
     }
 
     @RequestMapping(value = "/api/profiles/{id}/friends", method = RequestMethod.GET)
