@@ -19,16 +19,14 @@ public class TestData {
     public static final String FRIEND_FB_ID = "friendFbId";
     
     public static Profile testProfile() {
-        Profile profile = new Profile();
-        profile.setFacebookId(FB_ID);
+        Profile profile = new Profile(FB_ID);
         profile.setEmail("123@test.com");
         profile.setName("Cédric Gignon");
         return profile;
     }
 
     public static Profile testFriendProfile() {
-        Profile profile = new Profile();
-        profile.setFacebookId(FRIEND_FB_ID);
+        Profile profile = new Profile(FRIEND_FB_ID);
         profile.setEmail("friend@test.com");
         profile.setName("friend");
         return profile;
@@ -63,7 +61,7 @@ public class TestData {
 
     public static Friend toFriend(Profile profile) {
         Friend friend = new Friend();
-        friend.setFacebookId(profile.getFacebookId());
+        friend.setId(profile.getId());
         return friend;
     }
 

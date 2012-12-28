@@ -26,7 +26,7 @@ if (options.a || options.profiles) {
                 requestContentType: 'application/json; charset=UTF-8',body: [
                         email: json.email,
                         name: json.name,
-                        facebookId: json.facebookId
+                        id: json.facebookId
                 ])
 
         print "\033[K\rdone ${count} profiles"
@@ -35,7 +35,7 @@ if (options.a || options.profiles) {
 
 if (options.a || options.friends) {
     processFile('friends.export') { json, count ->
-        def friends = json.friends.collect { [facebookId: it.facebookId] }
+        def friends = json.friends.collect { [id: it.facebookId] }
 
         rest.put(path: "/api/profiles/${json.facebookId}/friends",
                 requestContentType: 'application/json; charset=UTF-8',body: friends)

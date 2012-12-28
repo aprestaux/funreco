@@ -47,9 +47,8 @@ public class DBProfileTest {
 		friendsIdList.add("friendId1");
 		friendsIdList.add("friendId2");
 
-		DBProfile profile = new DBProfile();
+		DBProfile profile = new DBProfile("testFBId");
 
-		profile.setFacebookId("testFBId");
 		profile.setEmail("test@gmail.com");
 		profile.setName("nameProfile");
 		profile.setFriendsIds(friendsIdList);
@@ -58,7 +57,7 @@ public class DBProfileTest {
 
 		assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
 		DBProfile dbProfile = datastore.find(DBProfile.class).field("name").equal("nameProfile").get();
-		assertThat(dbProfile.getFacebookId().equals("testFBId"));
+		assertThat(dbProfile.getExternalId().equals("testFBId"));
 
 	}
 }

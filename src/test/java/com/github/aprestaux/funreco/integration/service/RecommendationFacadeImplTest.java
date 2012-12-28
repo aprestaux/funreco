@@ -77,8 +77,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(testProfile());
 
         //act
-        Profile profile = new Profile();
-        profile.setFacebookId(TestData.FB_ID);
+        Profile profile = new Profile(TestData.FB_ID);
         profile.setEmail("newprofile@test.com");
         profile.setName("'newProfile'");
         facade.updateProfile(profile);
@@ -123,7 +122,7 @@ public class RecommendationFacadeImplTest {
 
         //assert
         assertThat(friends).hasSize(1);
-        assertThat(friends.get(0).getFacebookId()).isEqualTo(TestData.FRIEND_FB_ID);
+        assertThat(friends.get(0).getId()).isEqualTo(TestData.FRIEND_FB_ID);
     }
 
     @Test
@@ -136,7 +135,7 @@ public class RecommendationFacadeImplTest {
 
         // assert
         assertThat(datastore.find(DBAction.class).countAll()).isEqualTo(1);
-        assertThat(datastore.find(DBAction.class).get().getProfile().getFacebookId()).isEqualTo(TestData.FB_ID);
+        assertThat(datastore.find(DBAction.class).get().getProfile().getExternalId()).isEqualTo(TestData.FB_ID);
     }
 
     @Test
@@ -166,7 +165,7 @@ public class RecommendationFacadeImplTest {
     }
 
     @Test
-    public void findActionsWithFaceBookId() throws ProfileNotFoundException {
+    public void findActionsWithId() throws ProfileNotFoundException {
         //arrange
         facade.updateProfile(testProfile());
         facade.updateProfile(testFriendProfile());

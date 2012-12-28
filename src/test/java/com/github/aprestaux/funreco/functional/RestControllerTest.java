@@ -76,7 +76,7 @@ public class RestControllerTest {
         Friends friends = doGetFriends(FB_ID);
 
         assertThat(friends.size()).isEqualTo(1);
-        assertThat(friends.get(0).getFacebookId()).isEqualTo(testFriendProfile().getFacebookId());
+        assertThat(friends.get(0).getId()).isEqualTo(testFriendProfile().getId());
     }
 
     @Test
@@ -91,20 +91,20 @@ public class RestControllerTest {
                 .when().post("/api/profiles");
     }
 
-    private void doPutFriends(String facebookId, List<Friend> friends) {
+    private void doPutFriends(String id, List<Friend> friends) {
         given().contentType("application/json; charset=UTF-8").body(friends)
                 .expect().statusCode(200)
-                .when().put("/api/profiles/" + facebookId + "/friends");
+                .when().put("/api/profiles/" + id + "/friends");
     }
 
-    private void doPostAction(String facebookId, Action action) {
+    private void doPostAction(String id, Action action) {
         given().contentType("application/json; charset=UTF-8").body(action)
                 .expect().statusCode(200)
-                .when().post("/api/profiles/" + facebookId + "/actions");
+                .when().post("/api/profiles/" + id + "/actions");
     }
 
-    private Friends doGetFriends(String facebookId) {
+    private Friends doGetFriends(String id) {
         return expect().statusCode(200)
-                .when().get("/api/profiles/" + facebookId + "/friends").as(Friends.class);
+                .when().get("/api/profiles/" + id + "/friends").as(Friends.class);
     }
 }

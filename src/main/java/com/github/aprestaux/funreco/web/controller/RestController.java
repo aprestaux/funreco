@@ -20,10 +20,10 @@ public class RestController {
     @Inject
     private RecommendationFacade recommendationFacade;
 
-    @RequestMapping(value = "/api/profiles/{facebookId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/profiles/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Profile getProfile(@PathVariable String facebookId) throws ProfileNotFoundException {
-        return recommendationFacade.findProfile(facebookId);
+    public Profile getProfile(@PathVariable String id) throws ProfileNotFoundException {
+        return recommendationFacade.findProfile(id);
     }
 
     @RequestMapping(value = "/api/profiles", method = RequestMethod.POST)
@@ -32,21 +32,21 @@ public class RestController {
         recommendationFacade.updateProfile(profile);
     }
 
-    @RequestMapping(value = "/api/profiles/{facebookId}/friends", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/profiles/{id}/friends", method = RequestMethod.GET)
     @ResponseBody
-    public Friends getFriends(@PathVariable String facebookId) throws ProfileNotFoundException {
-        return recommendationFacade.findFriends(facebookId);
+    public Friends getFriends(@PathVariable String id) throws ProfileNotFoundException {
+        return recommendationFacade.findFriends(id);
     }
 
-    @RequestMapping(value = "/api/profiles/{facebookId}/friends", method = RequestMethod.PUT)
+    @RequestMapping(value = "/api/profiles/{id}/friends", method = RequestMethod.PUT)
     @ResponseBody
-    public void putFriends(@PathVariable String facebookId, @RequestBody Friends friends) throws ProfileNotFoundException {
-        recommendationFacade.updateFriends(facebookId, friends);
+    public void putFriends(@PathVariable String id, @RequestBody Friends friends) throws ProfileNotFoundException {
+        recommendationFacade.updateFriends(id, friends);
     }
 
-    @RequestMapping(value = "/api/profiles/{facebookId}/actions", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/profiles/{id}/actions", method = RequestMethod.POST)
     @ResponseBody
-    public void postAction(@PathVariable String facebookId, @RequestBody Action action) throws ProfileNotFoundException {
-        recommendationFacade.pushAction(facebookId, action);
+    public void postAction(@PathVariable String id, @RequestBody Action action) throws ProfileNotFoundException {
+        recommendationFacade.pushAction(id, action);
     }
 }

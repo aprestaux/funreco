@@ -26,11 +26,10 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
     @Override
     public void updateProfile(Profile profile) {
-        DBProfile dbProfile = findByFacebookId(profile.getFacebookId());
+        DBProfile dbProfile = findById(profile.getId());
 
         if (dbProfile == null) {
-            dbProfile = new DBProfile();
-            dbProfile.setFacebookId(profile.getFacebookId());
+            dbProfile = new DBProfile(profile.getId());
         }
 
         dbProfile.setName(profile.getName());
@@ -40,20 +39,20 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public Profile findProfile(String facebookId) throws ProfileNotFoundException {
-        return toProfile(assertFindByFacebookId(facebookId));
+    public Profile findProfile(String id) throws ProfileNotFoundException {
+        return toProfile(assertFindById(id));
     }
 
     @Override
-    public Profile findProfile(String email, String facebookId) {
+    public Profile findProfile(String email, String id) {
         DBProfile profile = findByEmail(email);
 
-        return profile != null ? toProfile(profile) : toProfile(findByFacebookId(facebookId));
+        return profile != null ? toProfile(profile) : toProfile(findById(id));
     }
 
     @Override
-    public void updateFriends(String facebookId, Friends friends) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindByFacebookId(facebookId);
+    public void updateFriends(String id, Friends friends) throws ProfileNotFoundException {
+        DBProfile dbProfile = assertFindById(id);
 
         if (friends == null) {
             friends = new Friends();
@@ -62,7 +61,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         List<String> ids = new ArrayList<String>();
 
         for (Friend friend : friends) {
-            ids.add(friend.getFacebookId());
+            ids.add(friend.getId());
         }
 
         dbProfile.setFriendsIds(ids);
@@ -71,14 +70,14 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public Friends findFriends(String facebookId) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindByFacebookId(facebookId);
+    public Friends findFriends(String id) throws ProfileNotFoundException {
+        DBProfile dbProfile = assertFindById(id);
 
         Friends friends = new Friends();
 
         if (dbProfile.getFriendsIds() != null) {
-            for (String id : dbProfile.getFriendsIds()) {
-                friends.add(toFriend(id));
+            for (String friendId : dbProfile.getFriendsIds()) {
+                friends.add(toFriend(friendId));
             }
         }
 
@@ -86,8 +85,8 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public void pushAction(String facebookId, Action action) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindByFacebookId(facebookId);
+    public void pushAction(String id, Action action) throws ProfileNotFoundException {
+        DBProfile dbProfile = assertFindById(id);
 
         DBAction dbAction = new DBAction();
         dbAction.setProfile(dbProfile);
@@ -105,8 +104,8 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public List<Action> findActions(String facebookId, int offset, int limit) {
-        List<DBAction> dbActions = datastore.find(DBAction.class).filter("profile.facebookId", facebookId).offset(offset).limit(limit).asList();
+    public List<Action> findActions(String id, int offset, int limit) {
+        List<DBAction> dbActions = datastore.find(DBAction.class).filter("profile.externalId", id).offset(offset).limit(limit).asList();
 
         return toActions(dbActions);
     }
@@ -159,17 +158,17 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
     }
 
     @Override
-    public Recommendations findRecommendations(String facebookId) {
+    public Recommendations findRecommendations(String id) {
         /*def lastRecommendation = [:]
         def views = 0
         def today= new Date()
         List<Action> actionsOfFriends
-        Profile profile= Profile.findByFacebookId(facebookId)
+        Profile profile= Profile.findById(id)
         List<Action> actions = Action.findAll()
         for (action in actions)
         {
             Profile friend= action.profile
-            if (profile.friendsIds.contains(friend.facebookId))
+            if (profile.friendsIds.contains(friend.id))
             {
                 actionsOfFriends = action
             }
@@ -197,9 +196,8 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
             return null;
         }
 
-        Profile profile = new Profile();
+        Profile profile = new Profile(dbProfile.getExternalId());
 
-        profile.setFacebookId(dbProfile.getFacebookId());
         profile.setEmail(dbProfile.getEmail());
         profile.setName(dbProfile.getName());
         
@@ -232,7 +230,7 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
         Object object = new Object();
         object.setId(dbObject.getObjectId());
-        object.getProperties().putAll(dbObject.getObjectProperties()); ;
+        object.getProperties().putAll(dbObject.getObjectProperties());
         
         return object;
     }
@@ -249,26 +247,26 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         return dbObject;
     }
 
-    public Friend toFriend(String facebookId) {
+    public Friend toFriend(String id) {
         Friend friend = new Friend();
 
-        friend.setFacebookId(facebookId);
+        friend.setId(id);
 
         return friend;
     }
 
-    private DBProfile assertFindByFacebookId(String facebookId) throws ProfileNotFoundException {
-        DBProfile dbProfile = findByFacebookId(facebookId);
+    private DBProfile assertFindById(String id) throws ProfileNotFoundException {
+        DBProfile dbProfile = findById(id);
 
         if (dbProfile == null) {
-            throw new ProfileNotFoundException("No profile for facebookId " + facebookId);
+            throw new ProfileNotFoundException("No profile for id " + id);
         }
 
         return dbProfile;
     }
 
-    private DBProfile findByFacebookId(String facebookId) {
-        return datastore.find(DBProfile.class).filter("facebookId", facebookId).get();
+    private DBProfile findById(String id) {
+        return datastore.find(DBProfile.class).filter("externalId", id).get();
     }
 
     private DBProfile findByEmail(String email) {

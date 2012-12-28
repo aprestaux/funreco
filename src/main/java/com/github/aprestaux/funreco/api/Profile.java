@@ -1,17 +1,23 @@
 package com.github.aprestaux.funreco.api;
 
 public class Profile {
-	private String facebookId;
+	private String id;
     private String email;
     private String name;
 
+    public Profile() {
+    }
 
-    public String getFacebookId() {
-		return facebookId;
+    public Profile(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+		return id;
 	}
 
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getEmail() {
@@ -34,7 +40,7 @@ public class Profile {
 	public String toString() {
         return "Profile{" +
                 "email='" + email + '\'' +
-                ", facebookId='" + facebookId + '\'' +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

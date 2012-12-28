@@ -15,7 +15,7 @@ public class SameDBProfileCondition extends Condition<DBProfile> {
 
     @Override
     public boolean matches(DBProfile profile) {
-        return reference.getFacebookId().equals(profile.getFacebookId())
+        return reference.getId().equals(profile.getExternalId())
                 && reference.getEmail().equals(profile.getEmail())
                 && reference.getName().equals(profile.getName());
     }

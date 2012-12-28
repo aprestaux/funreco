@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bson.types.ObjectId;
 
-import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Id;
 import com.google.code.morphia.annotations.Property;
@@ -14,17 +13,24 @@ public class DBProfile {
     @Id
     private ObjectId id;
 
-    @Embedded
-    private String facebookId;
+    @Property
+    private String externalId;
 
-    @Embedded
+    @Property
 	private String email;
 
-    @Embedded
+    @Property
 	private String name;
 
     @Property
 	private List<String> friendsIds;
+
+    public DBProfile() {
+    }
+
+    public DBProfile(String externalId) {
+        this.externalId = externalId;
+    }
 
     public String getEmail() {
         return email;
@@ -34,12 +40,12 @@ public class DBProfile {
         this.email = email;
     }
 
-    public String getFacebookId() {
-        return facebookId;
+    public String getExternalId() {
+        return externalId;
     }
 
-    public void setFacebookId(String facebookId) {
-        this.facebookId = facebookId;
+    public void setExternalId(String externalId) {
+        this.externalId = externalId;
     }
 
     public List<String> getFriendsIds() {
