@@ -17,7 +17,7 @@
 		</c:if>
 
 		<form action="/upload">
-			<button class="submit btn-primary" type="button">Import data</button>
+			<button class="submit btn btn-primary" type="button" style="margin-top: 100px">Import data</button>
 		</form>
 
 
