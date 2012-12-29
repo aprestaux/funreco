@@ -15,17 +15,11 @@ public class TestData {
     public static final String FRIEND_FB_ID = "friendFbId";
 
     public static Attributes testProfileAttributes() {
-        Attributes attributes = new Attributes();
-        attributes.put("mail", "123@test.com");
-        attributes.put("name", "Cédric Gignon");
-        return attributes;
+        return new Attributes().append("mail", "123@test.com").append("name", "Cédric Gignon");
     }
 
     public static Attributes testFriendProfileAttributes() {
-        Attributes attributes = new Attributes();
-        attributes.put("mail", "friend@test.com");
-        attributes.put("name", "friend");
-        return attributes;
+        return new Attributes().append("mail", "friend@test.com").append("name", "friend");
     }
 
     public static Action testAction() {

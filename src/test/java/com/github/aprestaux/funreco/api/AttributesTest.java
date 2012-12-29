@@ -22,4 +22,11 @@ public class AttributesTest {
 
         assertThat(attributes.get("key")).containsExactly("value1", "value2");
     }
+
+    @Test
+    public void append() {
+        attributes.append("key", "value1", "value2");
+
+        assertThat(attributes.get("key")).containsExactly("value1", "value2");
+    }
 }

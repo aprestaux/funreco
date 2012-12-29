@@ -74,9 +74,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(FB_ID, testProfileAttributes());
 
         //act
-        Attributes attributes = new Attributes();
-        attributes.put("mail", "newprofile@test.com");
-        attributes.put("name", "newProfile");
+        Attributes attributes = new Attributes().append("mail", "newprofile@test.com").append("name", "newProfile");
         facade.updateProfile(FB_ID, attributes);
 
         //assert

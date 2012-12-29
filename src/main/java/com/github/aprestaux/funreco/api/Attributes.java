@@ -11,4 +11,10 @@ public class Attributes extends HashMap<String, List<String>> {
     public void put(String key, String... values) {
         super.put(key, Arrays.asList(values));
     }
+
+    public Attributes append(String key, String... values) {
+        put(key, values);
+
+        return this;
+    }
 }
