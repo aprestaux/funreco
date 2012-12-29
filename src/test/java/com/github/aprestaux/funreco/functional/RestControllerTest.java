@@ -3,8 +3,6 @@ package com.github.aprestaux.funreco.functional;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +16,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.domain.DBProfile;
-import com.google.code.morphia.Datastore;
-import com.mongodb.Mongo;
 
 import static com.github.aprestaux.funreco.utils.TestData.*;
 import static com.jayway.restassured.RestAssured.expect;
@@ -28,11 +23,11 @@ import static com.jayway.restassured.RestAssured.given;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Fire tomcat with "mvn tomcat:run -Dspring.profiles.active=integration" to activate integration profile
+ * Fire tomcat with "mvn tomcat:run -Dspring.profiles.active=functional" to activate integration profile
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
-@ActiveProfiles(profiles = "integration")
+@ActiveProfiles(profiles = "functional")
 public class RestControllerTest {
     @Configuration
     @Import(IntegrationSpringConfig.class)
@@ -40,22 +35,14 @@ public class RestControllerTest {
 
     }
 
-    @Inject
-    private Datastore datastore;
-
-    @Inject
-    private Mongo mongo;
-
     @Before
     public void clean() {
-        mongo.dropDatabase(IntegrationSpringConfig.DB_NAME);
+
     }
 
     @Test
     public void putProfile() {
         doSaveProfile(FB_ID, testProfileAttributes());
-
-        assertThat(datastore.find(DBProfile.class).countAll()).isEqualTo(1);
     }
 
     @Test

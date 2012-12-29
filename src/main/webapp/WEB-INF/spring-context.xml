@@ -11,8 +11,6 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
     <bean class="com.github.aprestaux.funreco.SpringConfig" />
     <bean class="com.github.aprestaux.funreco.IntegrationSpringConfig" />
-
-    <!-- Découverte des services -->
-    <context:component-scan base-package="com.github.aprestaux.funreco.service"/>
+    <bean class="com.github.aprestaux.funreco.FunctionalSpringConfig" />
 
 </beans>

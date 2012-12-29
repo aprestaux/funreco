@@ -6,8 +6,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.springframework.stereotype.Service;
-
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Object;
@@ -17,8 +15,10 @@ import com.github.aprestaux.funreco.domain.DBObject;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.google.code.morphia.Datastore;
 
-@Service
-public class RecommendationFacadeImpl implements RecommendationFacade {
+/**
+ * Implementation of RecommendationFacade using mongodb
+ */
+public class RecommendationFacadeMongo implements RecommendationFacade {
     @Inject
     private Datastore datastore;
 

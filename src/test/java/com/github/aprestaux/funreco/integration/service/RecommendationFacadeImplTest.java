@@ -23,7 +23,7 @@ import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
-import com.github.aprestaux.funreco.service.RecommendationFacadeImpl;
+import com.github.aprestaux.funreco.service.RecommendationFacadeMongo;
 import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
@@ -38,10 +38,7 @@ public class RecommendationFacadeImplTest {
     @Configuration
     @Import(IntegrationSpringConfig.class)
     static class ContextConfiguration {
-        @Bean
-        public RecommendationFacade recommendationFacade() {
-            return new RecommendationFacadeImpl();
-        }
+
     }
 
     @Inject
