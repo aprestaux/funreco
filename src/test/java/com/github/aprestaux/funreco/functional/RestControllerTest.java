@@ -1,5 +1,6 @@
 package com.github.aprestaux.funreco.functional;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,8 +18,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Friend;
-import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
@@ -71,12 +70,12 @@ public class RestControllerTest {
     @Test
     public void putFriends() {
         doSaveProfile(FB_ID, testProfileAttributes());
-        doPutFriends(FB_ID, toFriends(testFriendProfile()));
+        doPutFriends(FB_ID, Arrays.asList(FRIEND_FB_ID));
 
-        Friends friends = doGetFriends(FB_ID);
+        List<String> friends = doGetFriends(FB_ID);
 
         assertThat(friends.size()).isEqualTo(1);
-        assertThat(friends.get(0).getId()).isEqualTo(testFriendProfile().getId());
+        assertThat(friends.get(0)).isEqualTo(FRIEND_FB_ID);
     }
 
     @Test
@@ -91,8 +90,8 @@ public class RestControllerTest {
                 .when().put("/api/profiles/" + id);
     }
 
-    private void doPutFriends(String id, List<Friend> friends) {
-        given().contentType("application/json; charset=UTF-8").body(friends)
+    private void doPutFriends(String id, List<String> friendIds) {
+        given().contentType("application/json; charset=UTF-8").body(friendIds)
                 .expect().statusCode(200)
                 .when().put("/api/profiles/" + id + "/friends");
     }
@@ -103,8 +102,8 @@ public class RestControllerTest {
                 .when().post("/api/profiles/" + id + "/actions");
     }
 
-    private Friends doGetFriends(String id) {
+    private List<String> doGetFriends(String id) {
         return expect().statusCode(200)
-                .when().get("/api/profiles/" + id + "/friends").as(Friends.class);
+                .when().get("/api/profiles/" + id + "/friends").as(List.class);
     }
 }

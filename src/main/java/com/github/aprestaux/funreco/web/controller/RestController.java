@@ -1,5 +1,7 @@
 package com.github.aprestaux.funreco.web.controller;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
@@ -11,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
 import com.github.aprestaux.funreco.service.RecommendationFacade;
 
@@ -34,14 +35,14 @@ public class RestController {
 
     @RequestMapping(value = "/api/profiles/{id}/friends", method = RequestMethod.GET)
     @ResponseBody
-    public Friends getFriends(@PathVariable String id) throws ProfileNotFoundException {
+    public List<String> getFriends(@PathVariable String id) throws ProfileNotFoundException {
         return recommendationFacade.findFriends(id);
     }
 
     @RequestMapping(value = "/api/profiles/{id}/friends", method = RequestMethod.PUT)
     @ResponseBody
-    public void putFriends(@PathVariable String id, @RequestBody Friends friends) throws ProfileNotFoundException {
-        recommendationFacade.updateFriends(id, friends);
+    public void putFriends(@PathVariable String id, @RequestBody List<String> friendIds) throws ProfileNotFoundException {
+        recommendationFacade.updateFriends(id, friendIds);
     }
 
     @RequestMapping(value = "/api/profiles/{id}/actions", method = RequestMethod.POST)

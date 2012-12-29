@@ -1,5 +1,6 @@
 package com.github.aprestaux.funreco.integration.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,7 +19,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Friend;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
@@ -102,7 +102,7 @@ public class RecommendationFacadeImplTest {
         facade.updateProfile(FB_ID, testProfileAttributes());
 
         //act
-        facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.FB_ID, Arrays.asList(FRIEND_FB_ID));
 
         //assert
         assertThat(datastore.find(DBProfile.class).get().getFriendsIds()).containsExactly(TestData.FRIEND_FB_ID);
@@ -113,14 +113,14 @@ public class RecommendationFacadeImplTest {
         //arrange
         facade.updateProfile(FB_ID, testProfileAttributes());
         facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
-        facade.updateFriends(TestData.FB_ID, toFriends(testFriendProfile()));
+        facade.updateFriends(TestData.FB_ID, Arrays.asList(FRIEND_FB_ID));
 
         //act
-        List<Friend> friends = facade.findFriends(TestData.FB_ID);
+        List<String> friends = facade.findFriends(TestData.FB_ID);
 
         //assert
         assertThat(friends).hasSize(1);
-        assertThat(friends.get(0).getId()).isEqualTo(TestData.FRIEND_FB_ID);
+        assertThat(friends.get(0)).isEqualTo(TestData.FRIEND_FB_ID);
     }
 
     @Test

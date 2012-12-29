@@ -6,10 +6,7 @@ import org.junit.Ignore;
 
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Friend;
-import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
-import com.github.aprestaux.funreco.api.Profile;
 
 @Ignore("test data factories")
 public class TestData {
@@ -24,23 +21,11 @@ public class TestData {
         return attributes;
     }
 
-    public static Profile testProfile() {
-        Profile profile = new Profile(FB_ID);
-        profile.setAttributes(testProfileAttributes());
-        return profile;
-    }
-
     public static Attributes testFriendProfileAttributes() {
         Attributes attributes = new Attributes();
         attributes.put("mail", "friend@test.com");
         attributes.put("name", "friend");
         return attributes;
-    }
-
-    public static Profile testFriendProfile() {
-        Profile profile = new Profile(FRIEND_FB_ID);
-        profile.setAttributes(testFriendProfileAttributes());
-        return profile;
     }
 
     public static Action testAction() {
@@ -59,21 +44,5 @@ public class TestData {
         object.putAttributes("show", "musique", "dance");
 
         return object;
-    }
-
-    public static Friend toFriend(Profile profile) {
-        Friend friend = new Friend();
-        friend.setId(profile.getId());
-        return friend;
-    }
-
-    public static Friends toFriends(Profile... profiles) {
-        Friends friends = new Friends();
-
-        for (Profile profile : profiles) {
-            friends.add(toFriend(profile));
-        }
-
-        return friends;
     }
 }

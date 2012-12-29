@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Friend;
-import com.github.aprestaux.funreco.api.Friends;
 import com.github.aprestaux.funreco.api.Object;
-import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.api.Recommendations;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBObject;
@@ -40,48 +37,32 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
 
     @Override
     public Attributes findProfile(String id) throws ProfileNotFoundException {
-        return toProfile(assertFindById(id)).getAttributes();
+        return assertFindById(id).getAttributes();
     }
 
     @Override
     public Attributes findProfile(String email, String id) {
         DBProfile profile = findByEmail(email);
 
-        return profile != null ? toProfile(profile).getAttributes() : toProfile(findById(id)).getAttributes();
+        return profile != null ? profile.getAttributes() : findById(id).getAttributes();
     }
 
     @Override
-    public void updateFriends(String id, Friends friends) throws ProfileNotFoundException {
+    public void updateFriends(String id, List<String> friendIds) throws ProfileNotFoundException {
         DBProfile dbProfile = assertFindById(id);
 
-        if (friends == null) {
-            friends = new Friends();
+        if (friendIds == null) {
+            friendIds = new ArrayList<String>();
         }
 
-        List<String> ids = new ArrayList<String>();
-
-        for (Friend friend : friends) {
-            ids.add(friend.getId());
-        }
-
-        dbProfile.setFriendsIds(ids);
+        dbProfile.setFriendsIds(friendIds);
 
         datastore.save(dbProfile);
     }
 
     @Override
-    public Friends findFriends(String id) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindById(id);
-
-        Friends friends = new Friends();
-
-        if (dbProfile.getFriendsIds() != null) {
-            for (String friendId : dbProfile.getFriendsIds()) {
-                friends.add(toFriend(friendId));
-            }
-        }
-
-        return friends;
+    public List<String> findFriends(String id) throws ProfileNotFoundException {
+        return assertFindById(id).getFriendsIds();
     }
 
     @Override
@@ -191,18 +172,6 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         return null;
     }
 
-    private Profile toProfile(DBProfile dbProfile) {
-        if (dbProfile == null) {
-            return null;
-        }
-
-        Profile profile = new Profile(dbProfile.getExternalId());
-
-        profile.setAttributes(dbProfile.getAttributes());
-        
-        return profile;
-    }
-
     public List<Action> toActions(List<DBAction> dbActions){
         List<Action> actions = new ArrayList<Action>();
 
@@ -244,14 +213,6 @@ public class RecommendationFacadeImpl implements RecommendationFacade {
         dbObject.setObjectProperties(object.getAttributes());
 
         return dbObject;
-    }
-
-    public Friend toFriend(String id) {
-        Friend friend = new Friend();
-
-        friend.setId(id);
-
-        return friend;
     }
 
     private DBProfile assertFindById(String id) throws ProfileNotFoundException {
