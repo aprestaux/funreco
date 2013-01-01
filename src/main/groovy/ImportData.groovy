@@ -9,8 +9,9 @@ cli.a(longOpt:'all', 'Import all')
 cli._(longOpt:'profiles', 'Import profiles')
 cli._(longOpt:'friends', 'Import friends')
 cli._(longOpt:'actions', 'Import actions')
+cli._(longOpt:'dataDir', args: 1, 'Directory containing files')
 
-def options = cli.parse(args)
+options = cli.parse(args)
 
 if (! (options.a || options.profiles || options.friends || options.actions)) {
     cli.usage()
@@ -22,14 +23,13 @@ rest = new RESTClient('http://localhost:8080')
 
 if (options.a || options.profiles) {
     processFile('profiles.export') { json, count ->
-        rest.post(path: '/api/profiles',
+        rest.put(path: "/api/profiles/${json.facebookId}",
                 requestContentType: 'application/json; charset=UTF-8',body: [
-                        email: json.email,
-                        name: json.name,
-                        id: json.facebookId
+                        email: [json.email],
+                        name: [json.name]
                 ])
 
-        print "\033[K\rdone ${count} profiles"
+        printStatus "done ${count} profiles"
     }
 }
 
@@ -41,7 +41,7 @@ if (options.a || options.friends) {
                 requestContentType: 'application/json; charset=UTF-8',body: friends)
 
 
-        print "\033[K\rdone ${count} profiles"
+        printStatus "done friends for ${count} profiles"
     }
 }
 
@@ -50,36 +50,52 @@ if (options.a || options.actions) {
         rest.post(path: "/api/profiles/${json.facebookId}/actions",
                 requestContentType: 'application/json; charset=UTF-8',body: [
                     date: json.date,
-                    object: json.object
+                    object: [
+                        id: json.object.id,
+                        attributes: json.object.properties
+                    ]
                 ])
 
-        print "\033[K\rdone ${count} profiles"
+        printStatus "done actions for ${count} profiles"
     }
 }
 
 def processFile(String filename, Closure closure) {
-    def file = new File(filename)
+    try {
+        def parent = options.dataDir ? new File(options.dataDir) : new File('.')
 
-    println "reading ${filename} (${lineCount(file)} lines)"
+        def file = new File(parent, filename)
 
-    def count = 1;
+        println "reading ${filename} (${lineCount(file)} lines)"
 
-    file.eachLine('UTF-8') { line ->
-        try {
-            closure.call(new JsonSlurper().parseText(line), count)
+        def count = 1;
 
-            System.out.flush()
+        file.eachLine('UTF-8') { line ->
+            try {
+                closure.call(new JsonSlurper().parseText(line), count)
 
-            count++;
-        } catch (e) {
-            println "Failed to process line ${line}"
+                System.out.flush()
 
-            throw e
+                count++;
+            } catch (e) {
+                println "Failed to process line ${line}"
+
+                throw e
+            }
         }
+    } catch (Exception e) {
+        e.printStackTrace(System.out)
+
+        System.exit(-1)
     }
 
     println ""
     println "done with ${filename}"
+}
+
+def printStatus(def text) {
+    print "\033[K\r"
+    print text
 }
 
 def lineCount(File file) {

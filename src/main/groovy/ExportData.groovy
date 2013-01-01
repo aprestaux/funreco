@@ -1,4 +1,5 @@
-@Grab(group = 'com.gmongo', module = 'gmongo', version = '1.0') import com.gmongo.GMongo
+@Grab(group = 'com.gmongo', module = 'gmongo', version = '1.0')
+import com.gmongo.GMongo
 import groovy.json.JsonBuilder
 import groovy.json.JsonOutput
 
