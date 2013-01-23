@@ -67,4 +67,10 @@ public class RecommandationFacadeStub implements RecommendationFacade {
     public Recommendations findRecommendations(String id) {
         return null;
     }
+
+	@Override
+	public List<Action> findAllActions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

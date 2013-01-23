@@ -17,6 +17,10 @@ public class DBProfile {
 
     @Property
     private String externalId;
+    
+    @Property
+    private String email;
+    
 
     @Embedded
 	private Attributes attributes = new Attributes();

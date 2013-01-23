@@ -31,10 +31,17 @@ public class IndexController {
 		model.addAttribute("facebookId", id);
 
 		model.addAttribute("profile", facade.findProfile(email, id));
-		// model.addAttribute("profile",null);
+		//model.addAttribute("profile",null);
 		model.addAttribute("actions", facade.findActions(0, 10));
 
 		return "index";
 	}
+	@RequestMapping({ "/allActions" })
+	public String pageAllActions(Model model) {
+		model.addAttribute("actions", facade.findAllActions());
+
+		return "actions";
+	}
+
 
 }

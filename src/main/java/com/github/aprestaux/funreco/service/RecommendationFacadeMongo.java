@@ -41,10 +41,10 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     @Override
-    public Attributes findProfile(String email, String id) {
+    public Attributes findProfile(String email, String id) throws ProfileNotFoundException {
         DBProfile profile = findByEmail(email);
-
-        return profile != null ? profile.getAttributes() : findById(id).getAttributes();
+       
+        return profile != null ? profile.getAttributes() : null;
     }
 
     @Override
@@ -80,6 +80,13 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     @Override
     public List<Action> findActions(int offset, int limit) {
         List<DBAction> dbActions = datastore.find(DBAction.class).offset(offset).limit(limit).asList();
+
+        return toActions(dbActions);
+    }
+    
+    @Override
+    public List<Action> findAllActions() {
+        List<DBAction> dbActions = datastore.find(DBAction.class).asList();
 
         return toActions(dbActions);
     }

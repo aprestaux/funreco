@@ -28,4 +28,6 @@ public interface RecommendationFacade {
     public Recommendations findDefaultRecommendations();
 
     public Recommendations findRecommendations(String id);
+
+	public List<Action> findAllActions();
 }
