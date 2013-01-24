@@ -42,6 +42,10 @@ public class IndexController {
 
 		return "actions";
 	}
+	@RequestMapping("/login")
+	public String login() {
+	    return "login";
+	}
 
 
 }
