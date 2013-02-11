@@ -18,8 +18,8 @@ import com.mongodb.MongoException;
 @Profile("default")
 public class SpringConfig {
     public static final String DB_NAME = "funreco";
-    private String DB_USER_NAME = "basilic";
-    private String DB_PASSWORD = "basilicECM";
+    private static final String DB_USER_NAME = "basilic";
+    private static final String DB_PASSWORD = "basilicECM";
 
     @Bean
     public RecommendationFacade recommendationFacade() {
