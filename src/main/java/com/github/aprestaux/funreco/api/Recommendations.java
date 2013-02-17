@@ -24,4 +24,14 @@ public class Recommendations {
 	public boolean equals(Recommendations recommendations) {
 		return (this.profileId.equals(recommendations.profileId) && this.recommendations.equals(recommendations.recommendations));
 	}
+
+	public String getProfileId() {
+		return profileId;
+	}
+
+	public void setProfileId(String profileId) {
+		this.profileId = profileId;
+	}
+	
+	
 }

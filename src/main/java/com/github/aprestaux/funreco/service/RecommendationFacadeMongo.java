@@ -2,14 +2,18 @@ package com.github.aprestaux.funreco.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Object;
+import com.github.aprestaux.funreco.api.Recommendation;
 import com.github.aprestaux.funreco.api.Recommendations;
+import com.github.aprestaux.funreco.api.RecommendedObject;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBObject;
 import com.github.aprestaux.funreco.domain.DBProfile;
@@ -94,7 +98,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     @Override
     public List<Action> findActions(String id, int offset, int limit) {
         List<DBAction> dbActions = datastore.find(DBAction.class).filter("profile.externalId", id).offset(offset).limit(limit).asList();
-
+        
         return toActions(dbActions);
     }
 
@@ -105,80 +109,56 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public Recommendations findDefaultRecommendations() {
-        /*def lastRecommendation = [:]
-        def views = 0
-        def today= new Date()
-        //List<Profile> profiles = []
-        List<Action> actions = Action.withCriteria {
-            between("date", today - 15, today)
-        }
-
-        for (action in actions)
-        {
-            Object objectTracked = null
-            if(action.object){
-                objectTracked = Object.findByObjectId(action.object.objectId)
-            }
-            else{
-                throw new UnsupportedOperationException("action doesn't contains object.")
-            }
-
-            if(objectTracked){
-                List<Action> actionsOfObject = Action.withCriteria {
-                    eq("object",objectTracked)
-                }
-                for (act in actionsOfObject)
-                {
-                    // profiles.add(act.profile)
-                    views++
-                }
-                lastRecommendation.put(convertIntoAction(action).object,views)
-            }
-            else{
-                throw new UnsupportedOperationException("there is no object with objectId = "+action.object.objectId+"\n Recommendation on this object is impossible!")
-            }
-
-        }
-        lastRecommendation.entrySet().sort{it.value}.reverse()
-        Recommendations defaultRecommendation = new Recommendations(recommendations : lastRecommendation, profile: null)
-        return defaultRecommendation*/
-        return null;
+    	List<DBAction> dbActions = datastore.find(DBAction.class).asList();
+        
+        return toRecommendations(dbActions);
     }
 
     @Override
     public Recommendations findRecommendations(String id) {
-        /*def lastRecommendation = [:]
-        def views = 0
-        def today= new Date()
-        List<Action> actionsOfFriends
-        Profile profile= Profile.findById(id)
-        List<Action> actions = Action.findAll()
-        for (action in actions)
-        {
-            Profile friend= action.profile
-            if (profile.friendsIds.contains(friend.id))
-            {
-                actionsOfFriends = action
-            }
-        }
-        for (action in actionsOfFriends)
-        {
-            List<Action> actionsOfObject = Action.withCriteria {
-            eq("object",action.object)
-        }
-            for (act in actionsOfObject)
-            {
-                views++
-            }
-            lastRecommendation.put(action.object,views)
-
-        }
-        lastRecommendation.entrySet().sort{it.value}.reverse()
-        Recommendations defaultRecommendation = new Recommendations(recommendations : lastRecommendation, date : today)
-        return defaultRecommendation */
-        return null;
+    	List<String> friendsIds = getFriendsIdsFor(id);
+    	List<DBAction> dbActions = new ArrayList<DBAction>();
+    	for(String friendId : friendsIds){
+    		for(DBAction dbAction_tmp : datastore.find(DBAction.class).filter("profile.externalId", friendId).asList())
+    			dbActions.add(dbAction_tmp);
+    	}
+        Recommendations reco = new Recommendations();
+        reco.setProfileId(friendsIds.get(0));
+        return reco;
     }
 
+    public Recommendations toRecommendations(List<DBAction> dbActions){
+    	Map<String, RecommendedObject> recommendedObjects = new HashMap<String, RecommendedObject>();
+        for(DBAction dbAction : dbActions){
+        	Object object = toObject(dbAction.getObject());
+        	String recomendorId = dbAction.getProfile().getExternalId();
+        	if(recommendedObjects.containsKey(object.getId())){
+        		recommendedObjects.get(object.getId()).getBy().add(recomendorId);
+        	}
+        	else{
+        		List<String> initialRecommenderList = new ArrayList<String>();
+        		initialRecommenderList.add(recomendorId);
+        		RecommendedObject recommendedObject = new RecommendedObject();
+        		recommendedObject.setBy(initialRecommenderList);
+        		recommendedObject.setObject(object);
+        		recommendedObjects.put(object.getId(), recommendedObject);
+        	}
+        }
+        
+        Recommendation recommendation = new Recommendation();
+        recommendation.setQuery("aaa");
+        ArrayList<RecommendedObject> recommendedObjectList = new ArrayList<RecommendedObject>();
+        recommendation.setObjects(recommendedObjectList);
+        for(RecommendedObject recoObject : recommendedObjects.values()){
+        	recommendation.addObject(recoObject);
+        }
+        
+        Recommendations recommendations = new Recommendations();
+        recommendations.addRecommendation(recommendation);
+        
+        return recommendations;
+    }
+    
     public List<Action> toActions(List<DBAction> dbActions){
         List<Action> actions = new ArrayList<Action>();
 
@@ -220,6 +200,18 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         dbObject.setObjectProperties(object.getAttributes());
 
         return dbObject;
+    }
+    
+    private List<String> getFriendsIdsFor(String id){
+    	DBProfile dbProfile = null;
+    	try {
+			dbProfile = assertFindById(id);
+		} catch (ProfileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+    	
+    	return dbProfile.getFriendsIds();
     }
 
     private DBProfile assertFindById(String id) throws ProfileNotFoundException {

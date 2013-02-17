@@ -6,7 +6,29 @@ public class RecommendedObject {
 	private Object object;
     private List<String> by;
 	
+    
 	public boolean equals(RecommendedObject recommendedObject) {
 		return (this.object.equals(recommendedObject.object) && this.by.equals(recommendedObject.by));
 	}
+
+
+	public Object getObject() {
+		return object;
+	}
+
+
+	public void setObject(Object object) {
+		this.object = object;
+	}
+
+
+	public List<String> getBy() {
+		return by;
+	}
+
+
+	public void setBy(List<String> by) {
+		this.by = by;
+	}
+	
 }
