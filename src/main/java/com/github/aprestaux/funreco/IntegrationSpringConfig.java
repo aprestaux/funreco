@@ -21,6 +21,8 @@ import com.mongodb.MongoException;
 @Profile("integration")
 public class IntegrationSpringConfig {
     public static final String DB_NAME = "funreco-test";
+    private static final String DB_USER_NAME = "basilic";
+    private static final String DB_PASSWORD = "basilicECM";
 
     @Bean
     public RecommendationFacade recommendationFacade() {
@@ -33,7 +35,7 @@ public class IntegrationSpringConfig {
 
         morphia.map(DBAction.class);
 
-        return morphia.createDatastore(mongo(), DB_NAME);
+        return morphia.createDatastore(mongo(), DB_NAME, DB_USER_NAME, DB_PASSWORD.toCharArray());
     }
 
     @Bean

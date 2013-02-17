@@ -18,6 +18,8 @@ import com.mongodb.MongoException;
 @Profile("default")
 public class SpringConfig {
     public static final String DB_NAME = "funreco";
+    private static final String DB_USER_NAME = "basilic";
+    private static final String DB_PASSWORD = "basilicECM";
 
     @Bean
     public RecommendationFacade recommendationFacade() {
@@ -30,6 +32,6 @@ public class SpringConfig {
 
         morphia.map(DBAction.class);
 
-        return morphia.createDatastore(new Mongo(), DB_NAME);
+        return morphia.createDatastore(new Mongo(), DB_NAME, DB_USER_NAME, DB_PASSWORD.toCharArray());
     }
 }
