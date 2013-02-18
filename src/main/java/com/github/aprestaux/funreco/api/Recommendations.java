@@ -9,6 +9,14 @@ public class Recommendations {
 
 	private Map<String, Recommendation> recommendations = new HashMap<String, Recommendation>();
 
+    public Recommendation first() {
+        if (recommendations == null || recommendations.size() == 0) {
+            return null;
+        } else {
+            return getEntries().iterator().next();
+        }
+    }
+
 	public Collection<Recommendation> getEntries() {
 		return recommendations.values();
 	}

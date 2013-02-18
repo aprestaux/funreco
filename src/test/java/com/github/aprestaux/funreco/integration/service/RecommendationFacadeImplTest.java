@@ -18,7 +18,6 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
-import com.github.aprestaux.funreco.api.Recommendation;
 import com.github.aprestaux.funreco.api.Recommendations;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
@@ -198,8 +197,7 @@ public class RecommendationFacadeImplTest {
 
         //assert
         assertThat(recommendations.getEntries()).hasSize(1);
-        Recommendation firstRecommendation = recommendations.getEntries().iterator().next();
-        assertThat(firstRecommendation.firstObject().getBy()).containsExactly(FB_ID);
+        assertThat(recommendations.first().firstObject().getBy()).containsExactly(FB_ID);
     }
     
     @Test
@@ -215,9 +213,8 @@ public class RecommendationFacadeImplTest {
 
         //assert
         assertThat(recommendations.getEntries()).hasSize(1);
-        Recommendation firstRecommendation = recommendations.forQuery("");
-        assertThat(firstRecommendation.getObjects()).hasSize(1);
-        assertThat(firstRecommendation.firstObject().getBy()).containsExactly(FRIEND_FB_ID);
+        assertThat(recommendations.first().getObjects()).hasSize(1);
+        assertThat(recommendations.first().firstObject().getBy()).containsExactly(FRIEND_FB_ID);
     }
     
 }
