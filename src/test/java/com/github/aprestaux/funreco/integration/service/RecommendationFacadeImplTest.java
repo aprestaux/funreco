@@ -199,10 +199,9 @@ public class RecommendationFacadeImplTest {
 
         //assert
         assertThat(recommendations.getEntries()).hasSize(1);
-        Recommendation firstRecommendation = (Recommendation) recommendations.getEntries().toArray()[0];
+        Recommendation firstRecommendation = recommendations.getEntries().iterator().next();
         RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
-        String firstRecommendorId = firstRecommendedObject.getBy().get(0);
-        assertThat(firstRecommendorId).isEqualTo(FB_ID);
+        assertThat(firstRecommendedObject.getBy()).containsExactly(FB_ID);
     }
     
     @Test
@@ -221,8 +220,7 @@ public class RecommendationFacadeImplTest {
         Recommendation firstRecommendation = recommendations.forQuery("");
         assertThat(firstRecommendation.getObjects()).hasSize(1);
         RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
-        String firstRecomendorId = firstRecommendedObject.getBy().get(0);
-        assertThat(firstRecomendorId).isEqualTo(FRIEND_FB_ID);
+        assertThat(firstRecommendedObject.getBy()).containsExactly(FRIEND_FB_ID);
     }
     
 }
