@@ -198,11 +198,11 @@ public class RecommendationFacadeImplTest {
     	Recommendations recommendations = facade.findDefaultRecommendations();
 
         //assert
-        assert recommendations.getEntries().size() == 1;
+        assertThat(recommendations.getEntries()).hasSize(1);
         Recommendation firstRecommendation = (Recommendation) recommendations.getEntries().toArray()[0];
         RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
         String firstRecommendorId = firstRecommendedObject.getBy().get(0);
-        assert firstRecommendorId.equals(FB_ID);
+        assertThat(firstRecommendorId).isEqualTo(FB_ID);
     }
     
     @Test
@@ -217,14 +217,13 @@ public class RecommendationFacadeImplTest {
     	Recommendations recommendations = facade.findRecommendations(FB_ID);
 
         //assert
-        assert recommendations.getEntries().size() == 1;
+        assertThat(recommendations.getEntries()).hasSize(1);
         Recommendation firstRecommendation = recommendations.forQuery("");
-        assert !firstRecommendation.getObjects().isEmpty();
-        assert firstRecommendation.getObjects().size()==1;
+        assertThat(firstRecommendation.getObjects()).hasSize(1);
         //- TODO
 //        RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
 //        String firstRecomendorId = firstRecommendedObject.getBy().get(0);
-//        assert firstRecomendorId==FRIEND_FB_ID;
+//        assertThat(firstRecomendorId).isEqualTo(FRIEND_FB_ID);
     }
     
 }
