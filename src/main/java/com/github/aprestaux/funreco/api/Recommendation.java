@@ -5,7 +5,9 @@ import java.util.List;
 
 public class Recommendation {
 	private String query;
-	
+
+    private List<RecommendedObject> objects = new ArrayList<RecommendedObject>();
+
     public String getQuery() {
 		return query;
 	}
@@ -22,14 +24,8 @@ public class Recommendation {
 		this.objects = objects;
 	}
 
-	private List<RecommendedObject> objects = new ArrayList<RecommendedObject>();
-
-    public void addObject(RecommendedObject object) {
+	public void addObject(RecommendedObject object) {
         objects.add(object);
     }
-	
-	public boolean equals(Recommendation recommendation) {
-		return (this.objects.equals(recommendation.objects) && this.query == recommendation.query);
-	}
 
 }

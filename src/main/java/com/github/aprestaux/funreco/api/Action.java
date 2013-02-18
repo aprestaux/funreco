@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Action {
 	private Object object;
+
     private Date date;
 
     public Action() {
