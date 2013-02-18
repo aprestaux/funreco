@@ -20,7 +20,6 @@ import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Recommendation;
 import com.github.aprestaux.funreco.api.Recommendations;
-import com.github.aprestaux.funreco.api.RecommendedObject;
 import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.github.aprestaux.funreco.service.ProfileNotFoundException;
@@ -200,8 +199,7 @@ public class RecommendationFacadeImplTest {
         //assert
         assertThat(recommendations.getEntries()).hasSize(1);
         Recommendation firstRecommendation = recommendations.getEntries().iterator().next();
-        RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
-        assertThat(firstRecommendedObject.getBy()).containsExactly(FB_ID);
+        assertThat(firstRecommendation.firstObject().getBy()).containsExactly(FB_ID);
     }
     
     @Test
@@ -219,8 +217,7 @@ public class RecommendationFacadeImplTest {
         assertThat(recommendations.getEntries()).hasSize(1);
         Recommendation firstRecommendation = recommendations.forQuery("");
         assertThat(firstRecommendation.getObjects()).hasSize(1);
-        RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
-        assertThat(firstRecommendedObject.getBy()).containsExactly(FRIEND_FB_ID);
+        assertThat(firstRecommendation.firstObject().getBy()).containsExactly(FRIEND_FB_ID);
     }
     
 }

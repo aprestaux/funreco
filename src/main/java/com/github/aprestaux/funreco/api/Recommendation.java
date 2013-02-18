@@ -8,6 +8,14 @@ public class Recommendation {
 
     private List<RecommendedObject> objects = new ArrayList<RecommendedObject>();
 
+    public RecommendedObject firstObject() {
+        if (objects == null || objects.size() == 0) {
+            return null;
+        } else {
+            return objects.get(0);
+        }
+    }
+
     public String getQuery() {
 		return query;
 	}
