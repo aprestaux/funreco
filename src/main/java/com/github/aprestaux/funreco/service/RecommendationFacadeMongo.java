@@ -122,7 +122,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     		for(DBAction dbAction_tmp : datastore.find(DBAction.class).filter("profile.externalId", friendId).asList())
     			dbActions.add(dbAction_tmp);
     	}
-        Recommendations reco = new Recommendations();
+        Recommendations reco = toRecommendations(dbActions);
         reco.setProfileId(friendsIds.get(0));
         return reco;
     }
@@ -146,7 +146,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         }
         
         Recommendation recommendation = new Recommendation();
-        recommendation.setQuery("aaa");
+        recommendation.setQuery("");
         ArrayList<RecommendedObject> recommendedObjectList = new ArrayList<RecommendedObject>();
         recommendation.setObjects(recommendedObjectList);
         for(RecommendedObject recoObject : recommendedObjects.values()){
