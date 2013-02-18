@@ -1,12 +1,5 @@
 package com.github.aprestaux.funreco.integration.service;
 
-import static com.github.aprestaux.funreco.utils.TestData.FB_ID;
-import static com.github.aprestaux.funreco.utils.TestData.FRIEND_FB_ID;
-import static com.github.aprestaux.funreco.utils.TestData.testFriendProfileAttributes;
-import static com.github.aprestaux.funreco.utils.TestData.testObject;
-import static com.github.aprestaux.funreco.utils.TestData.testProfileAttributes;
-import static org.fest.assertions.api.Assertions.assertThat;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,6 +28,9 @@ import com.github.aprestaux.funreco.service.RecommendationFacade;
 import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 import com.mongodb.Mongo;
+
+import static com.github.aprestaux.funreco.utils.TestData.*;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
@@ -206,7 +202,7 @@ public class RecommendationFacadeImplTest {
         Recommendation firstRecommendation = (Recommendation) recommendations.getEntries().toArray()[0];
         RecommendedObject firstRecommendedObject = firstRecommendation.getObjects().get(0);
         String firstRecommendorId = firstRecommendedObject.getBy().get(0);
-        assert firstRecommendorId==FB_ID;
+        assert firstRecommendorId.equals(FB_ID);
     }
     
     @Test
