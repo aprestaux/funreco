@@ -156,6 +156,26 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 		}
 		return toRecommendations(actions);
 	}
+	
+	@Override
+	public Recommendations recommendationsNotConsumed(String id) {
+		List<String> friendsIds = getFriendsIdsFor(id);
+		List<DBAction> dbActions = new ArrayList<DBAction>();
+		List<DBAction> actionsOfProfile = datastore.find(DBAction.class)
+				.filter("profile.externalId", id).asList();
+		for (String friendId : friendsIds) {
+			for (DBAction dbAction_tmp : datastore.find(DBAction.class)
+					.filter("profile.externalId", friendId).asList()){
+				for(DBAction actionOfProfile: actionsOfProfile){
+					if (!actionOfProfile.getObject().getObjectId().equals(dbAction_tmp.getObject().getObjectId()))
+							dbActions.add(dbAction_tmp);
+				}
+			}
+		}
+		return toRecommendations(dbActions);
+	}
+	
+	
 
 	public Recommendations toRecommendations(List<DBAction> dbActions) {
 		Map<String, RecommendedObject> recommendedObjects = new HashMap<String, RecommendedObject>();
@@ -265,5 +285,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 	private DBObject findByObjectId(String id) {
 		return datastore.find(DBObject.class).filter("id", id).get();
 	}
+
+	
 
 }

@@ -231,6 +231,23 @@ public class RecommendationFacadeImplTest {
     	assertThat(recommendations.first().firstObject().getBy()).containsExactly(FB_ID);
       
     }
+    @Test
+    public void recommendationsNotConsumed() throws ProfileNotFoundException {
+    	//arrange (push action)
+    	facade.updateProfile(FB_ID, testProfileAttributes());
+    	facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
+    	facade.updateFriends(FB_ID, Arrays.asList(FRIEND_FB_ID));
+    	facade.pushAction(TestData.FB_ID, new Action(testObject()));
+    	facade.pushAction(TestData.FRIEND_FB_ID, new Action(testObject()));
+    	
+    	//act
+    	Recommendations recommendations= facade.recommendationsNotConsumed(FB_ID);
+    	
+    	//assert   	
+    	assertThat(recommendations.getEntries()).hasSize(1);
+    	assertThat(recommendations.first().getObjects()).hasSize(0);
+    	
+    }
    
     
 }

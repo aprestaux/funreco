@@ -30,6 +30,8 @@ public interface RecommendationFacade {
     public Recommendations findRecommendations(String id);
     
     public Recommendations recommendationsFiltredByProperties(String ... properties);
+    
+    public Recommendations recommendationsNotConsumed(String id);
 
 	public List<Action> findAllActions();
 }

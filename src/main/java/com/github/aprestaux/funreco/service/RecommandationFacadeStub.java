@@ -80,4 +80,10 @@ public class RecommandationFacadeStub implements RecommendationFacade {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Recommendations recommendationsNotConsumed(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
