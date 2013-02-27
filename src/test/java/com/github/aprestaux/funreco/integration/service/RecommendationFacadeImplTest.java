@@ -216,5 +216,21 @@ public class RecommendationFacadeImplTest {
         assertThat(recommendations.first().getObjects()).hasSize(1);
         assertThat(recommendations.first().firstObject().getBy()).containsExactly(FRIEND_FB_ID);
     }
+    @Test
+    public void recommendationsFiltredByProperties() throws ProfileNotFoundException {
+    	//arrange (push action)
+    	facade.updateProfile(FB_ID, testProfileAttributes());
+    	facade.pushAction(TestData.FB_ID, new Action(testObject()));
+    	
+    	//act
+    	Recommendations recommendations= facade.recommendationsFiltredByProperties("musique");
+    	
+    	//assert
+    	assertThat(recommendations.getEntries()).hasSize(1);
+    	assertThat(recommendations.first().getObjects()).hasSize(1);
+    	assertThat(recommendations.first().firstObject().getBy()).containsExactly(FB_ID);
+      
+    }
+   
     
 }

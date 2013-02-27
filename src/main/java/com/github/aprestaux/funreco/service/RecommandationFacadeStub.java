@@ -73,4 +73,11 @@ public class RecommandationFacadeStub implements RecommendationFacade {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Recommendations recommendationsFiltredByProperties(
+			String... properties) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -1,6 +1,7 @@
 package com.github.aprestaux.funreco.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,216 +24,246 @@ import com.google.code.morphia.Datastore;
  * Implementation of RecommendationFacade using mongodb
  */
 public class RecommendationFacadeMongo implements RecommendationFacade {
-    @Inject
-    private Datastore datastore;
+	@Inject
+	private Datastore datastore;
 
-    @Override
-    public void updateProfile(String id, Attributes attributes) {
-        DBProfile dbProfile = findById(id);
+	@Override
+	public void updateProfile(String id, Attributes attributes) {
+		DBProfile dbProfile = findById(id);
 
-        if (dbProfile == null) {
-            dbProfile = new DBProfile(id);
-        }
+		if (dbProfile == null) {
+			dbProfile = new DBProfile(id);
+		}
 
-        dbProfile.setAttributes(attributes);
+		dbProfile.setAttributes(attributes);
 
-        datastore.save(dbProfile);
-    }
+		datastore.save(dbProfile);
+	}
 
-    @Override
-    public Attributes findProfile(String id) throws ProfileNotFoundException {
-        return assertFindById(id).getAttributes();
-    }
+	@Override
+	public Attributes findProfile(String id) throws ProfileNotFoundException {
+		return assertFindById(id).getAttributes();
+	}
 
-    @Override
-    public Attributes findProfile(String email, String id) throws ProfileNotFoundException {
-        DBProfile profile = findByEmail(email);
-       
-        return profile != null ? profile.getAttributes() : null;
-    }
+	@Override
+	public Attributes findProfile(String email, String id)
+			throws ProfileNotFoundException {
+		DBProfile profile = findByEmail(email);
 
-    @Override
-    public void updateFriends(String id, List<String> friendIds) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindById(id);
+		return profile != null ? profile.getAttributes() : null;
+	}
 
-        if (friendIds == null) {
-            friendIds = new ArrayList<String>();
-        }
+	@Override
+	public void updateFriends(String id, List<String> friendIds)
+			throws ProfileNotFoundException {
+		DBProfile dbProfile = assertFindById(id);
 
-        dbProfile.setFriendsIds(friendIds);
+		if (friendIds == null) {
+			friendIds = new ArrayList<String>();
+		}
 
-        datastore.save(dbProfile);
-    }
+		dbProfile.setFriendsIds(friendIds);
 
-    @Override
-    public List<String> findFriends(String id) throws ProfileNotFoundException {
-        return assertFindById(id).getFriendsIds();
-    }
+		datastore.save(dbProfile);
+	}
 
-    @Override
-    public void pushAction(String id, Action action) throws ProfileNotFoundException {
-        DBProfile dbProfile = assertFindById(id);
+	@Override
+	public List<String> findFriends(String id) throws ProfileNotFoundException {
+		return assertFindById(id).getFriendsIds();
+	}
 
-        DBAction dbAction = new DBAction();
-        dbAction.setProfile(dbProfile);
-        dbAction.setDate(action.getDate() == null ? new Date() : action.getDate());
-        dbAction.setObject(toDBObject(action.getObject()));
+	@Override
+	public void pushAction(String id, Action action)
+			throws ProfileNotFoundException {
+		DBProfile dbProfile = assertFindById(id);
 
-        datastore.save(dbAction);
-    }
+		DBAction dbAction = new DBAction();
+		dbAction.setProfile(dbProfile);
+		dbAction.setDate(action.getDate() == null ? new Date() : action
+				.getDate());
+		dbAction.setObject(toDBObject(action.getObject()));
 
-    @Override
-    public List<Action> findActions(int offset, int limit) {
-        List<DBAction> dbActions = datastore.find(DBAction.class).offset(offset).limit(limit).asList();
+		datastore.save(dbAction);
+	}
 
-        return toActions(dbActions);
-    }
-    
-    @Override
-    public List<Action> findAllActions() {
-        List<DBAction> dbActions = datastore.find(DBAction.class).asList();
+	@Override
+	public List<Action> findActions(int offset, int limit) {
+		List<DBAction> dbActions = datastore.find(DBAction.class)
+				.offset(offset).limit(limit).asList();
 
-        return toActions(dbActions);
-    }
+		return toActions(dbActions);
+	}
 
-    @Override
-    public List<Action> findActions(String id, int offset, int limit) {
-        List<DBAction> dbActions = datastore.find(DBAction.class).filter("profile.externalId", id).offset(offset).limit(limit).asList();
-        
-        return toActions(dbActions);
-    }
+	@Override
+	public List<Action> findAllActions() {
+		List<DBAction> dbActions = datastore.find(DBAction.class).asList();
 
-    @Override
-    public int countActions() {
-        return (int) datastore.find(DBAction.class).countAll();
-    }
+		return toActions(dbActions);
+	}
 
-    @Override
-    public Recommendations findDefaultRecommendations() {
-    	List<DBAction> dbActions = datastore.find(DBAction.class).asList();
-        
-        return toRecommendations(dbActions);
-    }
+	@Override
+	public List<Action> findActions(String id, int offset, int limit) {
+		List<DBAction> dbActions = datastore.find(DBAction.class)
+				.filter("profile.externalId", id).offset(offset).limit(limit)
+				.asList();
 
-    @Override
-    public Recommendations findRecommendations(String id) {
-    	List<String> friendsIds = getFriendsIdsFor(id);
-    	List<DBAction> dbActions = new ArrayList<DBAction>();
-    	for(String friendId : friendsIds){
-    		for(DBAction dbAction_tmp : datastore.find(DBAction.class).filter("profile.externalId", friendId).asList())
-    			dbActions.add(dbAction_tmp);
-    	}
-        Recommendations reco = toRecommendations(dbActions);
-        reco.setProfileId(friendsIds.get(0));
-        return reco;
-    }
+		return toActions(dbActions);
+	}
 
-    public Recommendations toRecommendations(List<DBAction> dbActions){
-    	Map<String, RecommendedObject> recommendedObjects = new HashMap<String, RecommendedObject>();
-        for(DBAction dbAction : dbActions){
-        	Object object = toObject(dbAction.getObject());
-        	String recomendorId = dbAction.getProfile().getExternalId();
-        	if(recommendedObjects.containsKey(object.getId())){
-        		recommendedObjects.get(object.getId()).getBy().add(recomendorId);
-        	}
-        	else{
-        		List<String> initialRecommenderList = new ArrayList<String>();
-        		initialRecommenderList.add(recomendorId);
-        		RecommendedObject recommendedObject = new RecommendedObject();
-        		recommendedObject.setBy(initialRecommenderList);
-        		recommendedObject.setObject(object);
-        		recommendedObjects.put(object.getId(), recommendedObject);
-        	}
-        }
-        
-        Recommendation recommendation = new Recommendation();
-        recommendation.setQuery("");
-        ArrayList<RecommendedObject> recommendedObjectList = new ArrayList<RecommendedObject>();
-        recommendation.setObjects(recommendedObjectList);
-        for(RecommendedObject recoObject : recommendedObjects.values()){
-        	recommendation.addObject(recoObject);
-        }
-        
-        Recommendations recommendations = new Recommendations();
-        recommendations.addRecommendation(recommendation);
-        
-        return recommendations;
-    }
-    
-    public List<Action> toActions(List<DBAction> dbActions){
-        List<Action> actions = new ArrayList<Action>();
+	@Override
+	public int countActions() {
+		return (int) datastore.find(DBAction.class).countAll();
+	}
 
-        for(DBAction dbAction : dbActions) {
-            actions.add(toAction(dbAction));
-        }
-        
-        return actions;
-    }
+	@Override
+	public Recommendations findDefaultRecommendations() {
+		List<DBAction> dbActions = datastore.find(DBAction.class).asList();
 
-    public Action toAction(DBAction dbAction){
-        Action action = new Action();
+		return toRecommendations(dbActions);
+	}
 
-        action.setDate(dbAction.getDate());
-        action.setObject(toObject(dbAction.getObject()));
-        
-        return action;
-    }
+	@Override
+	public Recommendations findRecommendations(String id) {
+		List<String> friendsIds = getFriendsIdsFor(id);
+		List<DBAction> dbActions = new ArrayList<DBAction>();
+		for (String friendId : friendsIds) {
+			for (DBAction dbAction_tmp : datastore.find(DBAction.class)
+					.filter("profile.externalId", friendId).asList())
+				dbActions.add(dbAction_tmp);
+		}
+		Recommendations reco = toRecommendations(dbActions);
+		reco.setProfileId(friendsIds.get(0));
+		return reco;
+	}
 
-    public Object toObject(DBObject dbObject){
-        if (dbObject == null) {
-            return null;
-        }
+	@Override
+	public Recommendations recommendationsFiltredByProperties(
+			String... properties) {
+		List<DBAction> actions = new ArrayList<DBAction>();
+		List<DBAction> dbActions = datastore.find(DBAction.class).asList();
 
-        Object object = new Object();
-        object.setId(dbObject.getObjectId());
-        object.getAttributes().putAll(dbObject.getObjectProperties());
-        
-        return object;
-    }
+		for (DBAction dbAction : dbActions) {
+			for (Map.Entry<String, List<String>> entry : dbAction.getObject()
+					.getObjectProperties().entrySet()) {
+				for (String propertie : properties) {
+					if (entry.getValue().contains(propertie)) {
+						if (!actions.contains(dbAction))
+							actions.add(dbAction);
+					}
 
-    public DBObject toDBObject(Object object){
-        if (object == null) {
-            return null;
-        }
+				}
+			}
+		}
+		return toRecommendations(actions);
+	}
 
-        DBObject dbObject = new DBObject();
-        dbObject.setObjectId(object.getId());
-        dbObject.setObjectProperties(object.getAttributes());
+	public Recommendations toRecommendations(List<DBAction> dbActions) {
+		Map<String, RecommendedObject> recommendedObjects = new HashMap<String, RecommendedObject>();
+		for (DBAction dbAction : dbActions) {
+			Object object = toObject(dbAction.getObject());
+			String recomendorId = dbAction.getProfile().getExternalId();
+			if (recommendedObjects.containsKey(object.getId())) {
+				recommendedObjects.get(object.getId()).getBy()
+						.add(recomendorId);
+			} else {
+				List<String> initialRecommenderList = new ArrayList<String>();
+				initialRecommenderList.add(recomendorId);
+				RecommendedObject recommendedObject = new RecommendedObject();
+				recommendedObject.setBy(initialRecommenderList);
+				recommendedObject.setObject(object);
+				recommendedObjects.put(object.getId(), recommendedObject);
+			}
+		}
 
-        return dbObject;
-    }
-    
-    private List<String> getFriendsIdsFor(String id){
-    	DBProfile dbProfile = null;
-    	try {
+		Recommendation recommendation = new Recommendation();
+		recommendation.setQuery("");
+		ArrayList<RecommendedObject> recommendedObjectList = new ArrayList<RecommendedObject>();
+		recommendation.setObjects(recommendedObjectList);
+		for (RecommendedObject recoObject : recommendedObjects.values()) {
+			recommendation.addObject(recoObject);
+		}
+
+		Recommendations recommendations = new Recommendations();
+		recommendations.addRecommendation(recommendation);
+
+		return recommendations;
+	}
+
+	public List<Action> toActions(List<DBAction> dbActions) {
+		List<Action> actions = new ArrayList<Action>();
+
+		for (DBAction dbAction : dbActions) {
+			actions.add(toAction(dbAction));
+		}
+
+		return actions;
+	}
+
+	public Action toAction(DBAction dbAction) {
+		Action action = new Action();
+
+		action.setDate(dbAction.getDate());
+		action.setObject(toObject(dbAction.getObject()));
+
+		return action;
+	}
+
+	public Object toObject(DBObject dbObject) {
+		if (dbObject == null) {
+			return null;
+		}
+
+		Object object = new Object();
+		object.setId(dbObject.getObjectId());
+		object.getAttributes().putAll(dbObject.getObjectProperties());
+
+		return object;
+	}
+
+	public DBObject toDBObject(Object object) {
+		if (object == null) {
+			return null;
+		}
+
+		DBObject dbObject = new DBObject();
+		dbObject.setObjectId(object.getId());
+		dbObject.setObjectProperties(object.getAttributes());
+
+		return dbObject;
+	}
+
+	private List<String> getFriendsIdsFor(String id) {
+		DBProfile dbProfile = null;
+		try {
 			dbProfile = assertFindById(id);
 		} catch (ProfileNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-    	
-    	return dbProfile.getFriendsIds();
-    }
 
-    private DBProfile assertFindById(String id) throws ProfileNotFoundException {
-        DBProfile dbProfile = findById(id);
+		return dbProfile.getFriendsIds();
+	}
 
-        if (dbProfile == null) {
-            throw new ProfileNotFoundException("No profile for id " + id);
-        }
+	private DBProfile assertFindById(String id) throws ProfileNotFoundException {
+		DBProfile dbProfile = findById(id);
 
-        return dbProfile;
-    }
+		if (dbProfile == null) {
+			throw new ProfileNotFoundException("No profile for id " + id);
+		}
 
-    private DBProfile findById(String id) {
-        return datastore.find(DBProfile.class).filter("externalId", id).get();
-    }
+		return dbProfile;
+	}
 
-    private DBProfile findByEmail(String email) {
-        return datastore.find(DBProfile.class).filter("email", email).get();
-    }
+	private DBProfile findById(String id) {
+		return datastore.find(DBProfile.class).filter("externalId", id).get();
+	}
 
-    private DBObject findByObjectId(String id) {
-        return datastore.find(DBObject.class).filter("id", id).get();
-    }
+	private DBProfile findByEmail(String email) {
+		return datastore.find(DBProfile.class).filter("email", email).get();
+	}
+
+	private DBObject findByObjectId(String id) {
+		return datastore.find(DBObject.class).filter("id", id).get();
+	}
+
 }
