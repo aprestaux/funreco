@@ -33,7 +33,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @ActiveProfiles(profiles = "integration")
-public class RecommendationFacadeImplTest {
+public class RecommendationFacadeMongoTest {
     @Configuration
     @Import(IntegrationSpringConfig.class)
     static class ContextConfiguration {
