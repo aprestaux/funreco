@@ -217,13 +217,13 @@ public class RecommendationFacadeMongoTest {
         assertThat(recommendations.first().firstObject().getBy()).containsExactly(FRIEND_FB_ID);
     }
     @Test
-    public void recommendationsFiltredByProperties() throws ProfileNotFoundException {
+    public void findRecommendationsByProperties() throws ProfileNotFoundException {
     	//arrange (push action)
     	facade.updateProfile(FB_ID, testProfileAttributes());
     	facade.pushAction(TestData.FB_ID, new Action(testObject()));
     	
     	//act
-    	Recommendations recommendations= facade.recommendationsFiltredByProperties("musique");
+    	Recommendations recommendations= facade.findRecommendationsByProperties("musique");
     	
     	//assert
     	assertThat(recommendations.getEntries()).hasSize(1);
@@ -232,7 +232,7 @@ public class RecommendationFacadeMongoTest {
       
     }
     @Test
-    public void recommendationsNotConsumed() throws ProfileNotFoundException {
+    public void findRecommendationsNotConsumed() throws ProfileNotFoundException {
     	//arrange (push action)
     	facade.updateProfile(FB_ID, testProfileAttributes());
     	facade.updateProfile(FRIEND_FB_ID, testFriendProfileAttributes());
@@ -241,7 +241,7 @@ public class RecommendationFacadeMongoTest {
     	facade.pushAction(TestData.FRIEND_FB_ID, new Action(testObject()));
     	
     	//act
-    	Recommendations recommendations= facade.recommendationsNotConsumed(FB_ID);
+    	Recommendations recommendations= facade.findRecommendationsNotConsumed(FB_ID);
     	
     	//assert   	
     	assertThat(recommendations.getEntries()).hasSize(1);

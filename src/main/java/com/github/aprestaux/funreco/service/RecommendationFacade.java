@@ -29,9 +29,9 @@ public interface RecommendationFacade {
 
     public Recommendations findRecommendations(String id);
     
-    public Recommendations recommendationsFiltredByProperties(String ... properties);
+    public Recommendations findRecommendationsByProperties(String ... properties);
     
-    public Recommendations recommendationsNotConsumed(String id);
+    public Recommendations findRecommendationsNotConsumed(String id);
 
 	public List<Action> findAllActions();
 }

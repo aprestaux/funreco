@@ -131,7 +131,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     @Override
-    public Recommendations recommendationsFiltredByProperties(String... properties) {
+    public Recommendations findRecommendationsByProperties(String... properties) {
         List<DBAction> result = new ArrayList<DBAction>();
 
         for (DBAction dbAction : allActions()) {
@@ -144,7 +144,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     @Override
-    public Recommendations recommendationsNotConsumed(String id) {
+    public Recommendations findRecommendationsNotConsumed(String id) {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
         List<DBAction> actionsOfProfile = datastore.find(DBAction.class).filter("profile.externalId", id).asList();
