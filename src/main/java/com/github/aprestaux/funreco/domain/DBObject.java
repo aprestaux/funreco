@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.github.aprestaux.funreco.api.Object;
 import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 
@@ -16,6 +17,38 @@ public class DBObject {
 
     @Embedded
     private Map<String, List<String>> objectProperties;
+
+    public static DBObject fromObject(com.github.aprestaux.funreco.api.Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        DBObject dbObject = new DBObject();
+        dbObject.setObjectId(object.getId());
+        dbObject.setObjectProperties(object.getAttributes());
+
+        return dbObject;
+    }
+
+    public com.github.aprestaux.funreco.api.Object toObject() {
+        Object object = new Object();
+        object.setId(getObjectId());
+        object.getAttributes().putAll(getObjectProperties());
+
+        return object;
+    }
+
+    public boolean containsValue(String... values) {
+        for (List<String> objectValues : objectProperties.values()) {
+            for (String value : values) {
+                if (objectValues.contains(value)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     public Date getDate() {
         return date;

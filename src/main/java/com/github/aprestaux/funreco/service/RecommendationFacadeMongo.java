@@ -79,7 +79,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         DBAction dbAction = new DBAction();
         dbAction.setProfile(dbProfile);
         dbAction.setDate(action.getDate() == null ? new Date() : action.getDate());
-        dbAction.setObject(toDBObject(action.getObject()));
+        dbAction.setObject(DBObject.fromObject(action.getObject()));
 
         datastore.save(dbAction);
     }
@@ -94,9 +94,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public List<Action> findAllActions() {
-        List<DBAction> dbActions = datastore.find(DBAction.class).asList();
-
-        return toActions(dbActions);
+        return toActions(allActions());
     }
 
     @Override
@@ -115,9 +113,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public Recommendations findDefaultRecommendations() {
-        List<DBAction> dbActions = datastore.find(DBAction.class).asList();
-
-        return toRecommendations(dbActions);
+        return toRecommendations(allActions());
     }
 
     @Override
@@ -136,21 +132,15 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public Recommendations recommendationsFiltredByProperties(String... properties) {
-        List<DBAction> actions = new ArrayList<DBAction>();
-        List<DBAction> dbActions = datastore.find(DBAction.class).asList();
+        List<DBAction> result = new ArrayList<DBAction>();
 
-        for (DBAction dbAction : dbActions) {
-            for (Map.Entry<String, List<String>> entry : dbAction.getObject().getObjectProperties().entrySet()) {
-                for (String property : properties) {
-                    if (entry.getValue().contains(property)) {
-                        if (!actions.contains(dbAction))
-                            actions.add(dbAction);
-                    }
-                }
+        for (DBAction dbAction : allActions()) {
+            if (dbAction.getObject().containsValue(properties) && !result.contains(dbAction)) {
+                result.add(dbAction);
             }
         }
 
-        return toRecommendations(actions);
+        return toRecommendations(result);
     }
 
     @Override
@@ -225,23 +215,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
             return null;
         }
 
-        Object object = new Object();
-        object.setId(dbObject.getObjectId());
-        object.getAttributes().putAll(dbObject.getObjectProperties());
-
-        return object;
-    }
-
-    public DBObject toDBObject(Object object) {
-        if (object == null) {
-            return null;
-        }
-
-        DBObject dbObject = new DBObject();
-        dbObject.setObjectId(object.getId());
-        dbObject.setObjectProperties(object.getAttributes());
-
-        return dbObject;
+        return dbObject.toObject();
     }
 
     private List<String> getFriendsIdsFor(String id) {
@@ -276,6 +250,10 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     private DBObject findByObjectId(String id) {
         return datastore.find(DBObject.class).filter("id", id).get();
+    }
+
+    private List<DBAction> allActions() {
+        return datastore.find(DBAction.class).asList();
     }
 
 

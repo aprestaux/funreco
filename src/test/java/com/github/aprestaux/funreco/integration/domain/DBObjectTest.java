@@ -20,6 +20,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import com.github.aprestaux.funreco.IntegrationSpringConfig;
 import com.github.aprestaux.funreco.domain.DBObject;
+import com.github.aprestaux.funreco.utils.TestData;
 import com.google.code.morphia.Datastore;
 
 import static org.fest.assertions.api.Assertions.assertThat;
@@ -59,4 +60,11 @@ public class DBObjectTest {
 		assertThat(dbObject.getObjectProperties() == properties);
 
 	}
+
+    @Test
+    public void containsValue() {
+        DBObject object = DBObject.fromObject(TestData.testObject());
+
+        assertThat(object.containsValue("musique")).isTrue();
+    }
 }

@@ -35,7 +35,7 @@ public class IntegrationSpringConfig {
 
         morphia.map(DBAction.class);
 
-        return morphia.createDatastore(mongo(), DB_NAME, DB_USER_NAME, DB_PASSWORD.toCharArray());
+        return morphia.createDatastore(mongo(), DB_NAME);
     }
 
     @Bean
