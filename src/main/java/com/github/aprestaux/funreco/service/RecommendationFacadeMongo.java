@@ -141,8 +141,8 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
         for (DBAction dbAction : dbActions) {
             for (Map.Entry<String, List<String>> entry : dbAction.getObject().getObjectProperties().entrySet()) {
-                for (String propertie : properties) {
-                    if (entry.getValue().contains(propertie)) {
+                for (String property : properties) {
+                    if (entry.getValue().contains(property)) {
                         if (!actions.contains(dbAction))
                             actions.add(dbAction);
                     }
