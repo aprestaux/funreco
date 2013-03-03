@@ -9,7 +9,47 @@ import com.google.code.morphia.annotations.Embedded;
 import com.google.code.morphia.annotations.Property;
 
 public class DBObject {
-    @Property
+    @Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result
+				+ ((objectId == null) ? 0 : objectId.hashCode());
+		result = prime
+				* result
+				+ ((objectProperties == null) ? 0 : objectProperties.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DBObject other = (DBObject) obj;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (objectId == null) {
+			if (other.objectId != null)
+				return false;
+		} else if (!objectId.equals(other.objectId))
+			return false;
+		if (objectProperties == null) {
+			if (other.objectProperties != null)
+				return false;
+		} else if (!objectProperties.equals(other.objectProperties))
+			return false;
+		return true;
+	}
+
+	@Property
     private Date date;
 
     @Property
