@@ -121,7 +121,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
         for (String friendId : friendsIds) {
-            for (DBAction dbAction_tmp : datastore.find(DBAction.class).filter("profile.externalId", friendId).asList()) {
+            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
                 dbActions.add(dbAction_tmp);
             }
         }
@@ -147,10 +147,9 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     public Recommendations findRecommendationsNotConsumed(String id) {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
-        List<DBAction> actionsOfProfile = datastore.find(DBAction.class).filter("profile.externalId", id).asList();
         for (String friendId : friendsIds) {
-            for (DBAction dbAction_tmp : datastore.find(DBAction.class).filter("profile.externalId", friendId).asList()) {
-                for (DBAction actionOfProfile : actionsOfProfile) {
+            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
+                for (DBAction actionOfProfile : allActionsOfProfile(id)) {
                     if (!actionOfProfile.getObject().getObjectId().equals(dbAction_tmp.getObject().getObjectId()))
                         dbActions.add(dbAction_tmp);
                 }
@@ -254,6 +253,10 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     private List<DBAction> allActions() {
         return datastore.find(DBAction.class).asList();
+    }
+    
+    private List<DBAction> allActionsOfProfile(String id){
+    	return  datastore.find(DBAction.class).filter("profile.externalId", id).asList(); 	
     }
 
 
