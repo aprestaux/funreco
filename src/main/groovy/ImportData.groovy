@@ -37,9 +37,12 @@ if (options.a || options.friends) {
     processFile('friends.export') { json, count ->
         def friends = json.friends.collect { [id: it.facebookId] }
 
-        rest.put(path: "/api/profiles/${json.facebookId}/friends",
-                requestContentType: 'application/json; charset=UTF-8',body: friends)
-
+        try {
+            rest.put(path: "/api/profiles/${json.facebookId}/friends",
+                    requestContentType: 'application/json; charset=UTF-8',body: friends)
+        } catch (ignored) {
+            println "\nFailed to update friends for profile id ${json.facebookId}"
+        }
 
         printStatus "done friends for ${count} profiles"
     }
@@ -47,14 +50,18 @@ if (options.a || options.friends) {
 
 if (options.a || options.actions) {
     processFile('actions.export') { json, count ->
-        rest.post(path: "/api/profiles/${json.facebookId}/actions",
-                requestContentType: 'application/json; charset=UTF-8',body: [
-                    date: json.date,
-                    object: [
-                        id: json.object.id,
-                        attributes: json.object.properties
-                    ]
-                ])
+        try {
+            rest.post(path: "/api/profiles/${json.facebookId}/actions",
+                    requestContentType: 'application/json; charset=UTF-8',body: [
+                        date: json.date,
+                        object: [
+                            id: json.object.id,
+                            attributes: json.object.properties
+                        ]
+                    ])
+        } catch (ignored) {
+            println "\nFailed to update actions for profile id ${json.facebookId}"
+        }
 
         printStatus "done actions for ${count} profiles"
     }
@@ -78,7 +85,7 @@ def processFile(String filename, Closure closure) {
 
                 count++;
             } catch (e) {
-                println "Failed to process line ${line}"
+                println "\nFailed to process line ${line}"
 
                 throw e
             }
