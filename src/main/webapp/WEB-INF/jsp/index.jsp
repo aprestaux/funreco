@@ -16,50 +16,62 @@
 			<div class="alert">${flashMessage}</div>
 		</c:if>
 
-		<form action="/upload">
-			<button class="submit btn btn-primary" type="button" style="margin-top: 100px">Import data</button>
-		</form>
+        <c:choose>
+            <c:when test="${not empty profile}">
+                <form action="/makereco?id=${profile_id}">
+                    <button class="submit btn btn-primary" type="button" style="margin-top: 100px">Generate recommendation for this user</button>
+                </form>
+                <div class="row">
+                    <div class="span12">
+                        <legend>Profile</legend>
+					    <span id="profile">${profile.name[0]} (${profile.email[0]})</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span9">
+                        <legend> Recommendations for ${profile.name[0]}</legend>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span12">
+                        <legend>
+                            Latests actions of ${profile.name[0]}
+                        </legend>
+            </c:when>
+            <c:otherwise>
+                <form action="/makereco">
+                    <button class="submit btn btn-primary" type="button" style="margin-top: 100px">Make generic recommendation</button>
+                </form>
+
+                <div class="row">
+                    <div class="span9">
+                        <legend> Recommendations for all users</legend>
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="span12">
+                        <legend>
+                            Latests actions
+                        </legend>
+            </c:otherwise>
+        </c:choose>
 
 
-
-
-		<div class="row">
-			<div class="span9">
-				<legend> Recommendations for all users</legend>
-
-			</div>
-		</div>
 		
-		<c:if test="${not empty email || not empty facebookId}">
-			<div class="row">
-				<div class="span12">
-					<legend>Profile</legend>
-					<span id="profile">${profile == null ? 'unknown profile' :
-						profile}</span>
-				</div>
-			</div>
-		</c:if>
-		
-		<div class="row">
-			<div class="span12">
-				<legend>
-					Latests actions <a href="/allActions"
-						class="btn btn-info pull-right"> View all </a>
-				</legend>
-				<ul id="actions">
-					<c:forEach var="action" items="${actions}">
 
-						<li>
-							<p>${action}</p>
-						</li>
-					</c:forEach>
+                        <ul id="actions">
+                            <c:forEach var="action" items="${actions}">
+                                <li>
+                                    <p>${action.date} - ${action.object.attributes}</p>
+                                </li>
+                            </c:forEach>
 
-				</ul>
-			</div>
-		</div>
-		
-		
-
+				        </ul>
+                    </div>
+                </div>
 
 	</div>
 </body>
