@@ -19,7 +19,7 @@
         <c:choose>
             <c:when test="${not empty profile}">
                 <form action="/makereco?id=${profile_id}">
-                    <button class="submit btn btn-primary" type="button" style="margin-top: 100px">Generate recommendation for this user</button>
+                    <button class="submit btn btn-primary" type="button" style="margin-top: 50px">Generate recommendation for this user</button>
                 </form>
                 <div class="row">
                     <div class="span12">
@@ -41,7 +41,7 @@
             </c:when>
             <c:otherwise>
                 <form action="/makereco">
-                    <button class="submit btn btn-primary" type="button" style="margin-top: 100px">Make generic recommendation</button>
+                    <button class="submit btn btn-primary" type="button" style="margin-top: 50px">Make generic recommendation</button>
                 </form>
 
                 <div class="row">
