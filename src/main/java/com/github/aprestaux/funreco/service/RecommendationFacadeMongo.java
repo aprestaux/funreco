@@ -18,6 +18,7 @@ import com.github.aprestaux.funreco.domain.DBAction;
 import com.github.aprestaux.funreco.domain.DBObject;
 import com.github.aprestaux.funreco.domain.DBProfile;
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.query.Query;
 
 /**
  * Implementation of RecommendationFacade using mongodb
@@ -113,15 +114,23 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public Recommendations findDefaultRecommendations() {
-        return toRecommendations(allActions());
+        //return toRecommendations(allActions());
+    	 List<DBAction> dbActions = new ArrayList<DBAction>();
+    	 Query<DBAction> q=datastore.find(DBAction.class); 
+         for (DBAction dbAction : q) {
+        	 dbActions.add(dbAction);  	 
+         }
+    	return toRecommendations(dbActions);
     }
 
     @Override
     public Recommendations findRecommendations(String id) {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
+       
         for (String friendId : friendsIds) {
-            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
+        	 Query<DBAction> q=datastore.find(DBAction.class).filter("profile.externalId", friendId);
+            for (DBAction dbAction_tmp : q) {
                 dbActions.add(dbAction_tmp);
             }
         }
@@ -133,8 +142,8 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     @Override
     public Recommendations findRecommendationsByProperties(String... properties) {
         List<DBAction> result = new ArrayList<DBAction>();
-
-        for (DBAction dbAction : allActions()) {
+        Query<DBAction> q=datastore.find(DBAction.class);     
+        for (DBAction dbAction : q){
             if (dbAction.getObject().containsValue(properties) && !result.contains(dbAction)) {
                 result.add(dbAction);
             }
@@ -148,8 +157,10 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
         for (String friendId : friendsIds) {
-            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
-                for (DBAction actionOfProfile : allActionsOfProfile(id)) {
+        	 Query<DBAction> q=datastore.find(DBAction.class).filter("profile.externalId", friendId);
+             for (DBAction dbAction_tmp : q){
+            	Query<DBAction> query=datastore.find(DBAction.class).filter("profile.externalId", id);
+                for (DBAction actionOfProfile : query) {
                     if (!actionOfProfile.getObject().getObjectId().equals(dbAction_tmp.getObject().getObjectId()))
                         dbActions.add(dbAction_tmp);
                 }
@@ -157,8 +168,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         }
         return toRecommendations(dbActions);
     }
-
-
+    
     public Recommendations toRecommendations(List<DBAction> dbActions) {
         Map<String, RecommendedObject> recommendedObjects = new HashMap<String, RecommendedObject>();
         for (DBAction dbAction : dbActions) {
@@ -252,12 +262,10 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     private List<DBAction> allActions() {
+    	
         return datastore.find(DBAction.class).asList();
     }
     
-    private List<DBAction> allActionsOfProfile(String id){
-    	return  datastore.find(DBAction.class).filter("profile.externalId", id).asList(); 	
-    }
-
+   
 
 }
