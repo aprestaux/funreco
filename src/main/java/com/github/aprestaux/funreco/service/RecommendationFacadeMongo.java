@@ -115,7 +115,6 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 
     @Override
     public Recommendations findDefaultRecommendations() {
-        //return toRecommendations(allActions());
     	 List<DBAction> dbActions = new ArrayList<DBAction>();
     	 Query<DBAction> q=datastore.find(DBAction.class); 
          for (DBAction dbAction : q) {
@@ -130,8 +129,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         List<DBAction> dbActions = new ArrayList<DBAction>();
        
         for (String friendId : friendsIds) {
-        	 Query<DBAction> q=datastore.find(DBAction.class).filter("profile.externalId", friendId);
-            for (DBAction dbAction_tmp : q) {
+            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
                 dbActions.add(dbAction_tmp);
             }
         }
@@ -158,10 +156,8 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
         for (String friendId : friendsIds) {
-        	 Query<DBAction> q=datastore.find(DBAction.class).filter("profile.externalId", friendId);
-             for (DBAction dbAction_tmp : q){
-            	Query<DBAction> query=datastore.find(DBAction.class).filter("profile.externalId", id);
-                for (DBAction actionOfProfile : query) {
+             for (DBAction dbAction_tmp :allActionsOfProfile(friendId)){
+                for (DBAction actionOfProfile :allActionsOfProfile(id)) {
                     if (!actionOfProfile.getObject().getObjectId().equals(dbAction_tmp.getObject().getObjectId()))
                         dbActions.add(dbAction_tmp);
                 }
@@ -277,6 +273,9 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     private List<DBAction> allActions() {
     	
         return datastore.find(DBAction.class).asList();
+    }
+    private Query<DBAction> allActionsOfProfile(String id){
+    	return  datastore.find(DBAction.class).filter("profile.externalId", id);   
     }
     
    
