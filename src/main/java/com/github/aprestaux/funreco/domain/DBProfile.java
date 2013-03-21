@@ -69,10 +69,9 @@ public class DBProfile {
 
     @Property
     private String externalId;
-    
+
     @Property
     private String email;
-    
 
     @Embedded
 	private Attributes attributes = new Attributes();
@@ -113,5 +112,13 @@ public class DBProfile {
 
     public void setAttributes(Attributes attributes) {
         this.attributes = attributes;
+    }
+
+    public String getEmail() {
+        if (attributes.containsKey("email")){
+            return attributes.get("email").get(0);
+        }else{
+            return "unknown email";
+        }
     }
 }

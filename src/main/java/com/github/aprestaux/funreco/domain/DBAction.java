@@ -91,7 +91,11 @@ public class DBAction {
     }
 
     public DBProfile getProfile() {
-        return profile;
+        if (profile != null) {
+            return profile;
+        }else{
+            return null;
+        }
     }
 
     public void setProfile(DBProfile profile) {

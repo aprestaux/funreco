@@ -34,7 +34,7 @@ public class IndexController {
             }else{
                 model.addAttribute("profile", facade.findProfile(id));
             }
-            model.addAttribute("profile_id", id);
+            model.addAttribute("facebook_id", id);
             model.addAttribute("actions", facade.findActions(id, 0, 10));
         }
         catch (ProfileNotFoundException exception) {
@@ -43,6 +43,27 @@ public class IndexController {
 
 		return "index";
 	}
+
+    @RequestMapping("/makeReco")
+    public String pageReco(@RequestParam("facebookId") String id, Model model) throws ProfileNotFoundException {
+
+        try {
+            if (id.length() > 0)  {
+                model.addAttribute("profile", facade.findProfile(id));
+                model.addAttribute("facebook_id", id);
+                model.addAttribute("actions", facade.findActions(id, 0, 10));
+                model.addAttribute("recommendations", facade.findRecommendations(id));
+            }else{
+                model.addAttribute("actions", facade.findActions(0, 10));
+                model.addAttribute("recommendations", facade.findDefaultRecommendations());
+            }
+        }
+        catch (ProfileNotFoundException exception) {
+            model.addAttribute("flashMessage", "Profile Not Found");
+        }
+
+        return "index";
+    }
 
 	@RequestMapping("/login")
 	public String login() {

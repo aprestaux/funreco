@@ -11,6 +11,7 @@ import javax.inject.Inject;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Object;
+import com.github.aprestaux.funreco.api.Profile;
 import com.github.aprestaux.funreco.api.Recommendation;
 import com.github.aprestaux.funreco.api.Recommendations;
 import com.github.aprestaux.funreco.api.RecommendedObject;
@@ -210,11 +211,23 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         return actions;
     }
 
+    public Profile toProfile(DBProfile dbProfile) {
+        Profile profile = new Profile();
+
+        profile.setEmail(dbProfile.getEmail());
+
+        return profile;
+
+    }
+
     public Action toAction(DBAction dbAction) {
         Action action = new Action();
 
         action.setDate(dbAction.getDate());
         action.setObject(toObject(dbAction.getObject()));
+        if (dbAction.getProfile() != null){
+            action.setProfile(toProfile(dbAction.getProfile()));
+        }
 
         return action;
     }

@@ -18,8 +18,9 @@
 
         <c:choose>
             <c:when test="${not empty profile}">
-                <form action="/makereco?id=${profile_id}">
-                    <button class="submit btn btn-primary" type="button" style="margin-top: 50px">Generate recommendation for this user</button>
+                <form action="/makeReco">
+                    <input type="hidden" name="facebookId" value="${facebook_id}"/>
+                    <button class="btn btn-primary" type="submit" style="margin-top: 50px">Generate recommendation for this user</button>
                 </form>
                 <div class="row">
                     <div class="span12">
@@ -27,12 +28,22 @@
 					    <span id="profile">${profile.name[0]} (${profile.email[0]})</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="span9">
-                        <legend> Recommendations for ${profile.name[0]}</legend>
 
+                <c:if test="${not empty recommendations}">
+                    <div class="row">
+                        <div class="span9">
+                            <legend> Recommendations for ${profile.name[0]}</legend>
+                            <ul id="recommendations">
+                                <c:forEach var="reco" items="${recommendations.entries}">
+                                    <li>
+                                        <p>${reco}</p>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                </c:if>
+
                 <div class="row">
                     <div class="span12">
                         <legend>
@@ -40,16 +51,25 @@
                         </legend>
             </c:when>
             <c:otherwise>
-                <form action="/makereco">
-                    <button class="submit btn btn-primary" type="button" style="margin-top: 50px">Make generic recommendation</button>
+                <form action="/makeReco">
+                    <input type="hidden" name="facebookId" value=""/>
+                    <button class="btn btn-primary" type="submit" style="margin-top: 50px">Make generic recommendation</button>
                 </form>
 
-                <div class="row">
-                    <div class="span9">
-                        <legend> Recommendations for all users</legend>
-
+                <c:if test="${not empty recommendations}">
+                    <div class="row">
+                        <div class="span9">
+                            <legend> Recommendations for all users</legend>
+                            <ul id="recommendations">
+                                <c:forEach var="reco" items="${recommendations.entries}">
+                                    <li>
+                                        <p>${reco}</p>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                </c:if>
 
                 <div class="row">
                     <div class="span12">
@@ -65,7 +85,7 @@
                         <ul id="actions">
                             <c:forEach var="action" items="${actions}">
                                 <li>
-                                    <p>${action.date} - ${action.object.attributes}</p>
+                                    <p>${action.date} by ${action.profile.email} - ${action.object.attributes}</p>
                                 </li>
                             </c:forEach>
 

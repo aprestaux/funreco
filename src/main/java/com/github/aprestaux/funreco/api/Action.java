@@ -7,12 +7,15 @@ public class Action {
 
     private Date date;
 
+    private Profile profile;
+
     public Action() {
     }
 
-    public Action(Object object) {
+    public Action(Object object, Profile profile) {
         this.object = object;
         this.date = new Date();
+        this.profile = profile;
     }
 
 	public Object getObject() {
@@ -30,4 +33,12 @@ public class Action {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
 }
