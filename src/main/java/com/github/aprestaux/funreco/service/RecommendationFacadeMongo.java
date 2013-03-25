@@ -54,7 +54,18 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
             throw new ProfileNotFoundException("No profile for email " + email);
         }
 
-        return profile != null ? profile.getAttributes() : null;
+        return profile.getAttributes();
+    }
+
+    @Override
+    public String getProfileId(String email) throws ProfileNotFoundException {
+        DBProfile profile = findByEmail(email);
+
+        if (profile == null) {
+            throw new ProfileNotFoundException("No profile for email " + email);
+        }
+
+        return profile.getExternalId();
     }
 
     @Override

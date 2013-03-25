@@ -13,6 +13,8 @@ public interface RecommendationFacade {
 
     public Attributes findProfile(String email, String id) throws ProfileNotFoundException;
 
+    public String getProfileId(String email) throws ProfileNotFoundException;
+
     public void updateFriends(String id, List<String> friendIds) throws ProfileNotFoundException;
 
     public List<String> findFriends(String id) throws ProfileNotFoundException;

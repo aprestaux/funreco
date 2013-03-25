@@ -1,15 +1,14 @@
 package com.github.aprestaux.funreco.web.controller;
 
-import javax.inject.Inject;
-
-import com.github.aprestaux.funreco.domain.DBProfile;
+import com.github.aprestaux.funreco.api.Profile;
+import com.github.aprestaux.funreco.service.ProfileNotFoundException;
+import com.github.aprestaux.funreco.service.RecommendationFacade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.github.aprestaux.funreco.service.ProfileNotFoundException;
-import com.github.aprestaux.funreco.service.RecommendationFacade;
+import javax.inject.Inject;
 
 @Controller
 public class IndexController {
@@ -27,15 +26,17 @@ public class IndexController {
 	@RequestMapping("/searchProfile")
 	public String pageProfile(@RequestParam("email") String email,
 			@RequestParam("facebookId") String id, Model model) throws ProfileNotFoundException {
-
+        String facebook_id;
         try {
             if (email.length() > 0)  {
                 model.addAttribute("profile", facade.findProfile(email, "0"));
+                facebook_id = facade.getProfileId(email);
             }else{
                 model.addAttribute("profile", facade.findProfile(id));
+                facebook_id = id;
             }
-            model.addAttribute("facebook_id", id);
-            model.addAttribute("actions", facade.findActions(id, 0, 10));
+            model.addAttribute("facebook_id", facebook_id);
+            model.addAttribute("actions", facade.findActions(facebook_id, 0, 10));
         }
         catch (ProfileNotFoundException exception) {
             model.addAttribute("flashMessage", "Profile Not Found");

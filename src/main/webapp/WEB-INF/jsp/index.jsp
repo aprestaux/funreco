@@ -36,7 +36,11 @@
                             <ul id="recommendations">
                                 <c:forEach var="reco" items="${recommendations.entries}">
                                     <li>
-                                        <p>${reco}</p>
+                                    <c:forEach var="obj" items="${reco.objects}">
+                                        <li>
+                                            <p>${obj.object.attributes}</p>
+                                        </li>
+                                    </c:forEach>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -58,7 +62,11 @@
                             <ul id="recommendations">
                                 <c:forEach var="reco" items="${recommendations.entries}">
                                     <li>
-                                        <p>${reco}</p>
+                                        <c:forEach var="obj" items="${reco.objects}">
+                                            <li>
+                                                <p>${obj.object.attributes}</p>
+                                            </li>
+                                        </c:forEach>
                                     </li>
                                 </c:forEach>
                             </ul>

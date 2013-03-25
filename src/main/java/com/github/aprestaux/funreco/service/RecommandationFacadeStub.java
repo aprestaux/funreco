@@ -32,6 +32,11 @@ public class RecommandationFacadeStub implements RecommendationFacade {
         return findProfile(id);
     }
 
+    @Override
+    public String getProfileId(String email) throws ProfileNotFoundException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public void updateFriends(String id, List<String> friendIds) throws ProfileNotFoundException {
         friends.put(id, friendIds);
     }
