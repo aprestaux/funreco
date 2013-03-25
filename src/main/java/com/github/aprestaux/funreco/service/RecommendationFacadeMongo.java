@@ -47,9 +47,12 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     @Override
-    public Attributes findProfile(String email, String id)
-            throws ProfileNotFoundException {
+    public Attributes findProfile(String email, String id) throws ProfileNotFoundException {
         DBProfile profile = findByEmail(email);
+
+        if (profile == null) {
+            throw new ProfileNotFoundException("No profile for email " + email);
+        }
 
         return profile != null ? profile.getAttributes() : null;
     }
@@ -263,7 +266,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     }
 
     private DBProfile findByEmail(String email) {
-        return datastore.find(DBProfile.class).filter("email", email).get();
+        return datastore.find(DBProfile.class).filter("attributes.email", email).get();
     }
 
     private DBObject findByObjectId(String id) {

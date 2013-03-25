@@ -44,11 +44,6 @@
                     </div>
                 </c:if>
 
-                <div class="row">
-                    <div class="span12">
-                        <legend>
-                            Latests actions of ${profile.name[0]}
-                        </legend>
             </c:when>
             <c:otherwise>
                 <form action="/makeReco">
@@ -71,27 +66,28 @@
                     </div>
                 </c:if>
 
-                <div class="row">
-                    <div class="span12">
-                        <legend>
-                            Latests actions
-                        </legend>
             </c:otherwise>
         </c:choose>
 
+                <c:if test="${not empty actions}">
+                    <div class="row">
+                        <div class="span12">
+                            <legend>
+                                Latests actions
+                            </legend>
 
-		
 
-                        <ul id="actions">
-                            <c:forEach var="action" items="${actions}">
-                                <li>
-                                    <p>${action.date} by ${action.profile.email} - ${action.object.attributes}</p>
-                                </li>
-                            </c:forEach>
+                            <ul id="actions">
+                                <c:forEach var="action" items="${actions}">
+                                    <li>
+                                        <p>${action.date} by ${action.profile.email} - ${action.object.attributes}</p>
+                                    </li>
+                                </c:forEach>
 
-				        </ul>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                </c:if>
 
 	</div>
 </body>
