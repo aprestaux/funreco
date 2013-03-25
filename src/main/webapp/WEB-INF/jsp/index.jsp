@@ -20,7 +20,7 @@
             <c:when test="${not empty profile}">
                 <form action="/makeReco">
                     <input type="hidden" name="facebookId" value="${facebook_id}"/>
-                    <button class="btn btn-primary" type="submit" style="margin-top: 50px">Generate recommendation for this user</button>
+                    <button class="btn btn-primary" type="submit" style="margin-top: 20px">Generate recommendation for this user</button>
                 </form>
                 <div class="row">
                     <div class="span12">
@@ -53,7 +53,7 @@
             <c:otherwise>
                 <form action="/makeReco">
                     <input type="hidden" name="facebookId" value=""/>
-                    <button class="btn btn-primary" type="submit" style="margin-top: 50px">Make generic recommendation</button>
+                    <button class="btn btn-primary" type="submit" style="margin-top: 20px">Make generic recommendation</button>
                 </form>
 
                 <c:if test="${not empty recommendations}">
