@@ -12,10 +12,9 @@ public class Action {
     public Action() {
     }
 
-    public Action(Object object, Profile profile) {
+    public Action(Object object) {
         this.object = object;
         this.date = new Date();
-        this.profile = profile;
     }
 
 	public Object getObject() {
