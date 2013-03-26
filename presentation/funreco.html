@@ -32,7 +32,7 @@
 				<section>
 					<h1>FunReco</h1>
 					<h3>Moteur de recommandations de contenu pour FunRadio</h3>
-					<img width="500" height="238" src="img/funradio.jpg" alt="Down arrow">
+					<img width="500" height="238" src="img/funradio.jpg">
 					<p>
 						<small>Tuteur entreprise : Damien Bourdette</small>
 						<br/>
@@ -46,13 +46,23 @@
 						<h2>Contexte & Environnement</h2>
 						<p>
 							<ul>
-								<li class="fragment">Recommandation de contenu</li>
-								<li class="fragment">Basées sur l'API Facebook OpenGraph</li>
+								<li>Nouveau site <a href="http://www.funradio.fr" target="_blank">Fun Radio</a></li>
+								<li>Connectivité Facebook <img style="border:none;margin-top:0px;margin-bottom:-10px;" width="50" height="50" src="img/facebook.jpg"></li>
+								<li>Recommandation de contenu (musique, vidéos)</li>
 							</ul>
 						</p>
 					</section>
 					<section>
 						<h2>Objectifs & Stratégie</h2>
+						<ul>
+							<li>Moteur de recommandation dans une application à part : FunReco</li>
+							<li>Utilisation de l'API OpenGraph Facebook <img style="border:none;margin-top:0px;margin-bottom:-10px;" width="50" height="50" src="img/facebook.jpg"></li>
+							<ul>
+								<li class="fragment">Restriction d'usage</li>
+								<li class="fragment">Appel à une base de données (MongoDB)</li>
+							</ul>
+							<li class="fragment">Webservices REST pour faire la jonction avec le site client</li>
+						</ul>
 					</section>
 				</section>
 
@@ -76,12 +86,15 @@
 				</section>
 
 				<section>
-					<h2>Développement par les tests</h2>
+					<h2><i>Test Driven Development</i></h2>
 					<p>
 						Développement par les tests
+						<br/>
+						Librairie Java dédiée : JUnit
 						<blockquote>
-							Citation
+							Write the tests first
 						</blockquote>
+						<img width="250" height="250" src="img/tdd.jpg">
 					</p>
 				</section>
 
@@ -99,11 +112,36 @@
 
 				<section>
 					<h2>Mise en production</h2>
+					<p>Environnement Apache </p>
+					<p class="fragment">Gestionnaire de build Maven & Tomcat</p>
+					<p class="fragment">
+						Intégration continue avec Jenkins connecté au GitHub
+						<img width="150" height="150" src="img/apache.png">
+						<img width="150" height="150" src="img/tomcat.gif">
+						<img width="150" height="150" src="img/jenkins.png">
+					</p>
 				</section>
 
 				<section>
-					<h1>Résultats</h1>
-					<a href="http://localhost:8080">Par ici</a>
+					<section>
+						<h1>Résultats</h1>
+						<a href="http://localhost:8080" target="_blank">L'application ...</a>
+						<br/>
+						<a href="http://java.basilic.ovh1.ec-m.fr" target="_blank">... en production ...</a>
+						<br/>
+						<a href="http://java.basilic.ovh1.ec-m.fr/jenkins" target="_blank">... et son interface Jenkins</a>
+					</section>
+					<section>
+						<h1>Conclusion</h1>
+						<ul>
+							<li>Découverte de technologies avancées</li>
+							<li>Mise en application des bonnes pratiques</li>
+							<li>Premier aperçu d'un projet informatique en entreprise</li>
+						</ul>
+					</section>
+					<section>
+						<h1>Merci de votre attention</h1>
+					</section>
 				</section>
 
 			</div>
