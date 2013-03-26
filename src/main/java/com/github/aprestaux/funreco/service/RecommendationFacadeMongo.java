@@ -1,6 +1,7 @@
 package com.github.aprestaux.funreco.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -147,9 +148,16 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     	return toRecommendations(dbActions);
     }
 
+    private static List<String> pickNRandom(List<String> lst, int n) {
+        ArrayList<String> copy = new ArrayList<String>(lst);
+        Collections.shuffle(copy);
+        return copy.subList(0, n);
+    }
+    
     @Override
     public Recommendations findRecommendations(String id) {
         List<String> friendsIds = getFriendsIdsFor(id);
+        friendsIds = pickNRandom(friendsIds, 3);//TODO need to be removed after beam search-like algorithme is set up
         List<DBAction> dbActions = new ArrayList<DBAction>();
        
         try {
@@ -157,7 +165,6 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 			    for (DBAction dbAction_tmp : allActionsOfProfile(jsonIdToString(friendId))) {
 			        dbActions.add(dbAction_tmp);
 			    }
-			    break;//TODO need to be removed after beam search-like algorithme is set up
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
