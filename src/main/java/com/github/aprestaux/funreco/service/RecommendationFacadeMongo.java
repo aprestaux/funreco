@@ -142,11 +142,17 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         List<String> friendsIds = getFriendsIdsFor(id);
         List<DBAction> dbActions = new ArrayList<DBAction>();
        
-        for (String friendId : friendsIds) {
-            for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
-                dbActions.add(dbAction_tmp);
-            }
-        }
+        try {
+			for (String friendId : friendsIds) {
+			    for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
+			        dbActions.add(dbAction_tmp);
+			    }
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return findDefaultRecommendations();
+		}
         Recommendations reco = toRecommendations(dbActions);
         reco.setProfileId(friendsIds.get(0));
         return reco;
