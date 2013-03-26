@@ -6,8 +6,18 @@ public class RecommendedObject {
     private Object object;
 
     private List<String> by;
+    
+    private List<String> byEmail;
 
-    public Object getObject() {
+    public List<String> getByEmail() {
+		return byEmail;
+	}
+
+	public void setByEmail(List<String> byEmail) {
+		this.byEmail = byEmail;
+	}
+
+	public Object getObject() {
         return object;
     }
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.github.aprestaux.funreco.api.Action;
 import com.github.aprestaux.funreco.api.Attributes;
 import com.github.aprestaux.funreco.api.Recommendations;
+import com.github.aprestaux.funreco.api.RecommendedObject;
 
 /**
  * Stub implementation for RecommendationFacade
@@ -91,4 +92,12 @@ public class RecommandationFacadeStub implements RecommendationFacade {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public List<RecommendedObject> getRecommendedObjects(
+			Recommendations recos, int limit) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

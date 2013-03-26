@@ -34,13 +34,14 @@
                         <div class="span9">
                             <legend> Recommendations for ${profile.name[0]}</legend>
                             <ul id="recommendations">
-                                <c:forEach var="reco" items="${recommendations.entries}">
+                                <c:forEach var="reco" items="${recommendations}">
                                     <li>
-                                    <c:forEach var="obj" items="${reco.objects}">
-                                        <li>
-                                            <p>${obj.object.attributes}</p>
-                                        </li>
-                                    </c:forEach>
+                                        <p> ${reco.object.attributes}</p> <p><b> Recommended By : </b></p> 
+                                        <c:forEach var="email" items="${reco.byEmail}">
+                                       	  	
+                                       		<p> <i class="icon-user"> </i> ${email} </p>
+                                      	  
+                                        </c:forEach>
                                     </li>
                                 </c:forEach>
                             </ul>
@@ -60,12 +61,13 @@
                         <div class="span9">
                             <legend> Recommendations for all users</legend>
                             <ul id="recommendations">
-                                <c:forEach var="reco" items="${recommendations.entries}">
+                                <c:forEach var="reco" items="${recommendations}">
                                     <li>
-                                        <c:forEach var="obj" items="${reco.objects}">
-                                            <li>
-                                                <p>${obj.object.attributes}</p>
-                                            </li>
+                                        <p> ${reco.object.attributes}</p> <p><b> Recommended By : </b></p> 
+                                        <c:forEach var="email" items="${reco.byEmail}">
+                                       	  	
+                                       		<p> <i class="icon-user"> </i> ${email} </p>
+                                      	  
                                         </c:forEach>
                                     </li>
                                 </c:forEach>

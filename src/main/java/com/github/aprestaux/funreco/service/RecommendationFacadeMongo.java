@@ -3,6 +3,7 @@ package com.github.aprestaux.funreco.service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -201,13 +202,19 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         for (DBAction dbAction : dbActions) {
             Object object = toObject(dbAction.getObject());
             String recomendorId = dbAction.getProfile().getExternalId();
+            String recomendorEmail = dbAction.getProfile().getEmail();
             if (recommendedObjects.containsKey(object.getId())) {
                 recommendedObjects.get(object.getId()).getBy().add(recomendorId);
+                if(!recommendedObjects.get(object.getId()).getByEmail().contains(recomendorEmail))
+                recommendedObjects.get(object.getId()).getByEmail().add(recomendorEmail);
             } else {
                 List<String> initialRecommenderList = new ArrayList<String>();
+                List<String> initialRecommenderListEmail = new ArrayList<String>();
                 initialRecommenderList.add(recomendorId);
+                initialRecommenderListEmail.add(recomendorEmail);
                 RecommendedObject recommendedObject = new RecommendedObject();
                 recommendedObject.setBy(initialRecommenderList);
+                recommendedObject.setByEmail(initialRecommenderListEmail);
                 recommendedObject.setObject(object);
                 recommendedObjects.put(object.getId(), recommendedObject);
             }
@@ -227,6 +234,21 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         return recommendations;
     }
 
+    @Override
+    public List<RecommendedObject> getRecommendedObjects(Recommendations recos,int limit){
+    	
+    	List<RecommendedObject> recommendedObjects = new ArrayList<RecommendedObject>(); 
+    	
+    	Recommendation recommendation = recos.getEntries().iterator().next();
+    	
+    	Iterator<RecommendedObject> iterator = recommendation.getObjects().iterator();
+    	
+    	while (recommendedObjects.size() < limit){
+    			recommendedObjects.add(iterator.next());
+    	}
+    	
+    	return recommendedObjects;    	
+    }
     public List<Action> toActions(List<DBAction> dbActions) {
         List<Action> actions = new ArrayList<Action>();
 

@@ -53,10 +53,11 @@ public class IndexController {
                 model.addAttribute("profile", facade.findProfile(id));
                 model.addAttribute("facebook_id", id);
                 model.addAttribute("actions", facade.findActions(id, 0, 10));
-                model.addAttribute("recommendations", facade.findRecommendations(id));
+                model.addAttribute("recommendations", facade.getRecommendedObjects(facade.findRecommendations(id),10));
             }else{
                 model.addAttribute("actions", facade.findActions(0, 10));
-                model.addAttribute("recommendations", facade.findDefaultRecommendations());
+                model.addAttribute("recommendations", facade.getRecommendedObjects(facade.findDefaultRecommendations(),10));
+               
             }
         }
         catch (ProfileNotFoundException exception) {
