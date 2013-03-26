@@ -82,6 +82,16 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         datastore.save(dbProfile);
     }
 
+    private String jsonIdToString(String jsonString){
+    	try {
+			jsonString = jsonString.split(":")[1];
+		} catch (Exception e) {
+			e.printStackTrace();
+			return jsonString;
+		}
+		return jsonString.substring(jsonString.indexOf("\"")+1,jsonString.lastIndexOf("\""));
+    }
+    
     @Override
     public List<String> findFriends(String id) throws ProfileNotFoundException {
         return assertFindById(id).getFriendsIds();
@@ -144,12 +154,12 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
        
         try {
 			for (String friendId : friendsIds) {
-			    for (DBAction dbAction_tmp : allActionsOfProfile(friendId)) {
+			    for (DBAction dbAction_tmp : allActionsOfProfile(jsonIdToString(friendId))) {
 			        dbActions.add(dbAction_tmp);
 			    }
+			    break;//TODO need to be removed after beam search-like algorithme is set up
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return findDefaultRecommendations();
 		}
@@ -295,7 +305,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
         return datastore.find(DBAction.class).asList();
     }
     private Query<DBAction> allActionsOfProfile(String id){
-    	return  datastore.find(DBAction.class).filter("profile.externalId", id);   
+    	return  datastore.find(DBAction.class).filter("profile.externalId", id);//.filter("profile.externalId", id);   
     }
     
    
