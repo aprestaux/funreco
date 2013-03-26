@@ -259,9 +259,21 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     	
     	Iterator<RecommendedObject> iterator = recommendation.getObjects().iterator();
     	
-    	while (recommendedObjects.size() < limit){
-    			recommendedObjects.add(iterator.next());
-    	}
+    	int index = 0;
+    	RecommendedObject recommendedObject_tmp = null;
+    	try {
+			while ((recommendedObject_tmp=iterator.next()) != null){
+				index = index + 1;
+				if(index>=limit){
+					break;
+				}
+				recommendedObjects.add(recommendedObject_tmp);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return recommendedObjects;
+		}
     	
     	return recommendedObjects;    	
     }
