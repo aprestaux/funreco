@@ -157,13 +157,21 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
     @Override
     public Recommendations findRecommendations(String id) {
         List<String> friendsIds = getFriendsIdsFor(id);
-        friendsIds = pickNRandom(friendsIds, 3);//TODO need to be removed after beam search-like algorithme is set up
         List<DBAction> dbActions = new ArrayList<DBAction>();
        
         try {
+        	friendsIds = pickNRandom(friendsIds, 20);//TODO need to be removed after beam search-like algorithme is set up
+        	boolean sufficientActions = false;
 			for (String friendId : friendsIds) {
+				if(sufficientActions){
+					break;
+				}
 			    for (DBAction dbAction_tmp : allActionsOfProfile(jsonIdToString(friendId))) {
 			        dbActions.add(dbAction_tmp);
+			        if(dbActions.size()>=11){
+			        	sufficientActions = true;
+			        	break;
+			        }
 			    }
 			}
 		} catch (Exception e) {
@@ -216,6 +224,7 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
                 RecommendedObject recommendedObject = new RecommendedObject();
                 recommendedObject.setBy(initialRecommenderList);
                 recommendedObject.setObject(object);
+                if(!object.getAttributes().isEmpty() && !object.getId().equals(null) && !object.getId().equals(""))
                 recommendedObjects.put(object.getId(), recommendedObject);
             }
         }
