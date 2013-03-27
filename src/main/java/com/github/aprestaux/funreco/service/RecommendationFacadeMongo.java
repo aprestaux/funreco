@@ -1,7 +1,5 @@
 package com.github.aprestaux.funreco.service;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -194,13 +192,11 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 	
 	@Override
 	public Recommendations findRecommendations(String id) {
-		int nb_friends = 10;
-		
-		long startTime = System.nanoTime();
 		List<String> friendsIds = getFriendsIdsFor(id);
 		List<DBAction> dbActions = new ArrayList<DBAction>();
+		Recommendations reco = null;
 		try {
-			friendsIds = pickNRandom(friendsIds, nb_friends);// TODO need to be
+			friendsIds = pickNRandom(friendsIds, 5);// TODO need to be
 																// removed after
 																// beam
 																// search-like
@@ -214,22 +210,21 @@ public class RecommendationFacadeMongo implements RecommendationFacade {
 				for (DBAction dbAction_tmp : pickNRandom(
 						allActionsOfProfile(jsonIdToString(friendId)), 5)) {
 					dbActions.add(dbAction_tmp);
-					if (dbActions.size() >= 11) {
+					if (dbActions.size() >= 11){
 						sufficientActions = true;
 						break;
 					}
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return findDefaultRecommendations();
-		}
-		Recommendations reco = toRecommendations(dbActions);
+		
+		reco = toRecommendations(dbActions);
 		reco.setProfileId(friendsIds.get(0));
-		long endTime = System.nanoTime();
-		int time = (int) ((endTime - startTime) / (1000 * 1000));
-		System.out.println(nb_friends + " --> "
-				+ time + " ms");
+		
+		reco.first().firstObject().toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return findDefaultRecommendations(); 
+		}
 		
 		return reco;
 	}
