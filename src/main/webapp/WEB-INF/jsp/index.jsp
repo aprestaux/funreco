@@ -36,7 +36,8 @@
                             <ul id="recommendations">
                                 <c:forEach var="reco" items="${recommendations}">
                                     <li>
-                                        <p> ${reco.object.attributes}</p> <p><b> Recommended By : </b></p> 
+                                        <p><a href="${reco.object.attributes["url"][0]}" target="_blank"> ${reco.object.attributes}</a></p>
+                                        <p><b> Recommended By : </b></p> 
                                         <c:forEach var="email" items="${reco.byEmail}">
                                        	  	
                                        		<p> <i class="icon-user"> </i> ${email} </p>
